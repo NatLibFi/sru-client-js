@@ -39,6 +39,7 @@
 	"commander": "^2.8.1",
 	"jjv": ">=1.0.2 <1.1",
 	"jjve": "^0.5.0",
+	"requirejs-plugins": "^1.0.2",
 	"es6-polyfills": "https://github.com/NatLibFi/es6-polyfills"
     },
     "devDependencies": {
