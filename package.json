@@ -1,56 +1,58 @@
 {
-    "name": "sru-client",
-    "description": "SRU (Search/Retrieval via URL) Javascript client library and command-line interface",
-    "author": {
-	"name": "The National Library of Finland"
-    },
-    "keywords": [
-	"sru",
-	"search",
-	"query",
-	"find",
-	"retrieval",
-	"retrieve",
-	"uri",
-	"url",
-	"marc",
-	"bib",
-	"bibliography",
-	"bibliographic",
-	"library",
-	"libraries",
-	"cql",
-	"client"
-    ],
-    "homepage": "https://github.com/NatLibFi/sru-client",
-    "bugs": {
-	"url": "https://github.com/NatLibFi/sru-client/issues"
-    },
-    "repository": {
-	"type": "git",
-	"url": "git@github.com:NatLibFi/sru-client.git"
-    },
-    "license": " AGPL-3.0",
-    "version": "0.0.1",
-    "main": "./lib/main",
-    "bin": "./bin/sru-client.sh",
-    "dependencies": {
-	"jxon": "^1.5.4",
-	"commander": "^2.8.1",
-	"jjv": ">=1.0.2 <1.1",
-	"jjve": "^0.5.0",
-	"requirejs-plugins": "^1.0.2",
-	"es6-polyfills": "https://github.com/NatLibFi/es6-polyfills"
-    },
-    "devDependencies": {
-	"chai": "^3.2.0",
-	"chai-as-promised": "^5.1.0",
-	"grunt": "^0.4.5",
-	"jshint": "^2.8.0",
-	"mocha": "^2.3.2",
-	"istanbul": "^0.3.20",
-	"grunt-contrib-jshint": "^0.11.3",
-	"grunt-mocha-test": "^0.12.7",
-	"grunt-mocha-istanbul": ">=3.0.1 <3.2"
-    }
+	"name": "@natlibfi/sru-client",
+	"description": "SRU (Search/Retrieval via URL) Javascript client library and command-line interface",
+	"author": {
+		"name": "The National Library of Finland"
+	},
+	"keywords": [
+		"sru",
+		"search",
+		"query",
+		"find",
+		"retrieval",
+		"retrieve",
+		"uri",
+		"url",
+		"marc",
+		"bib",
+		"bibliography",
+		"bibliographic",
+		"library",
+		"libraries",
+		"cql",
+		"client"
+	],
+	"homepage": "https://github.com/NatLibFi/sru-client",
+	"bugs": {
+		"url": "https://github.com/NatLibFi/sru-client/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:NatLibFi/sru-client.git"
+	},
+	"license": "LGPL-3.0+",
+	"version": "1.0.0",
+	"main": "./lib/main",
+	"bin": "./bin/sru-client.sh",
+	"dependencies": {
+		"@natlibfi/es6-polyfills": "^2.0.1",
+		"commander": "^2.11.0",
+		"jjv": "^1.0.2",
+		"jjve": "^0.5.2",
+		"jxon": "^2.0.0-beta.5",
+		"npm-check-updates": "^2.13.0",
+		"nyc": "^11.2.1",
+		"requirejs-plugins": "^1.0.2"
+	},
+	"devDependencies": {
+		"chai": "^4.1.2",
+		"chai-as-promised": "^7.1.1",
+		"grunt": "^1.0.1",
+		"jshint": "^2.9.5",
+		"mocha": "^4.0.1",
+		"istanbul": "^0.4.5",
+		"grunt-contrib-jshint": "^1.1.0",
+		"grunt-mocha-test": "^0.13.3",
+		"grunt-mocha-istanbul": "^5.0"
+	}
 }
