@@ -1,58 +1,83 @@
 {
 	"name": "@natlibfi/sru-client",
-	"description": "SRU (Search/Retrieval via URL) Javascript client library and command-line interface",
+	"description": "SRU client for Node.js and browser",
 	"author": {
 		"name": "The National Library of Finland"
 	},
 	"keywords": [
 		"sru",
-		"search",
-		"query",
-		"find",
-		"retrieval",
-		"retrieve",
-		"uri",
-		"url",
-		"marc",
-		"bib",
-		"bibliography",
-		"bibliographic",
 		"library",
 		"libraries",
-		"cql",
-		"client"
+		"marc",
+		"code4lib"
 	],
-	"homepage": "https://github.com/NatLibFi/sru-client",
+	"homepage": "https://github.com/natlibfi/sru-client",
 	"bugs": {
-		"url": "https://github.com/NatLibFi/sru-client/issues"
+		"url": "https://github.com/natlibfi/sru-client/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:NatLibFi/sru-client.git"
+		"url": "git@github.com:natlibfi/sru-client.git"
 	},
 	"license": "LGPL-3.0+",
-	"version": "1.0.0",
-	"main": "./lib/main",
-	"bin": "./bin/sru-client.sh",
+	"version": "2.0.0",
+	"main": "./dist/index.js",
+	"engines": {
+		"node": ">=7"
+	},
+	"scripts": {
+		"prepublishOnly": "npm run build:transpile",
+		"check-deps": "npm-check;exit 0",
+		"lint": "eslint --fix src",
+		"test": "npm run lint",
+		"clean": "rimraf build dist",
+		"build:transpile": "npm run clean && babel src --source-maps --out-dir=dist --minified",
+		"build": "npm run build:transpile && npm run check-deps",
+		"watch:test": "cross-env DEBUG=1 NODE_ENV=debug chokidar src -c 'npm test && npm run build'",
+		"publish-to-npm": "npm install && npm test && npm publish --access=public"
+	},
 	"dependencies": {
-		"@natlibfi/es6-polyfills": "^2.0.1",
-		"commander": "^2.11.0",
-		"jjv": "^1.0.2",
-		"jjve": "^0.5.2",
-		"jxon": "^2.0.0-beta.5",
-		"npm-check-updates": "^2.13.0",
-		"nyc": "^11.2.1",
-		"requirejs-plugins": "^1.0.2"
+		"node-fetch": "^2.2.0",
+		"xmldom": "^0.x.x"
 	},
 	"devDependencies": {
-		"chai": "^4.1.2",
-		"chai-as-promised": "^7.1.1",
-		"grunt": "^1.0.1",
-		"jshint": "^2.9.5",
-		"mocha": "^4.0.1",
-		"istanbul": "^0.4.5",
-		"grunt-contrib-jshint": "^1.1.0",
-		"grunt-mocha-test": "^0.13.3",
-		"grunt-mocha-istanbul": "^5.0"
+		"babel-cli": "^6.26.0",
+		"babel-eslint": "^8.2.6",
+		"babel-preset-env": "^1.6.1",
+		"babel-register": "^6.26.0",
+		"chokidar-cli": "^1.2.0",
+		"cross-env": "^5.2.0",
+		"eslint": "^5.2.0",
+		"eslint-config-xo": "0.x.x",
+		"eslint-plugin-import": "^2.13.0",
+		"npm-check": "^5.7.1",
+		"rimraf": "^2.6.2"
+	},
+	"eslintConfig": {
+		"parser": "babel-eslint",
+		"plugins": [
+			"import"
+		],
+		"extends": [
+			"xo",
+			"plugin:import/errors"
+		],
+		"rules": {
+			"prefer-arrow-callback": [
+				"error"
+			]
+		}
+	},
+	"babel": {
+		"presets": [
+			[
+				"env",
+				{
+					"targets": {
+						"node": "7"
+					}
+				}
+			]
+		]
 	}
 }
