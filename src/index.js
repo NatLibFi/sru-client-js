@@ -42,7 +42,7 @@ export default function ({serverUrl, version, maximumRecords, recordSchema}) {
 		searchRetrieve
 	};
 
-	async function searchRetrieve(query) {
+	async function searchRetrieve(query) { // eslint-disable-line require-await
 		return pump();
 
 		async function pump(startRecord = 1, results = []) {
