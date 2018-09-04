@@ -1,4 +1,4 @@
-SRU client for Node.js and browser [![NPM Version](https://img.shields.io/npm/v/@natlibfi/sru-client.svg)](https://npmjs.org/package/@natlibfi/sru-client) [![Build Status](https://travis-ci.org/NatLibFi/sru-client.svg)](https://travis-ci.org/NatLibFi/sru-client)
+# SRU client for Node.js and browser [![NPM Version](https://img.shields.io/npm/v/@natlibfi/sru-client.svg)](https://npmjs.org/package/@natlibfi/sru-client) [![Build Status](https://travis-ci.org/NatLibFi/sru-client.svg)](https://travis-ci.org/NatLibFi/sru-client)
 
 SRU client for Node.js and browser
 
