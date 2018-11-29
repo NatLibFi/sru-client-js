@@ -1,0 +1,14 @@
+pipeline:
+  build:
+    image: node:8
+    commands:
+    - npm install
+    - npm test
+    - npm run build
+  npm:
+    image: plugins/npm
+    settings:
+      token: $NPM_TOKEN
+    secrets: [npm_token]
+    when:
+      event: tag
