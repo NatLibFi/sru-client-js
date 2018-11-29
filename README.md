@@ -7,13 +7,21 @@ SRU client for Node.js and browser
 ```js
 import createSruClient from '@natlibfi/sru-client';
 const client = createSruClient({url: 'https://foo.bar'});
-const results = await client.searchRetrieve('foo');
+
+client.searchRetrieve('foo')
+  .on('record', xmlString => processRecord(xmlString))
+  .on('end', () => endProcessing())
+  .on('error', err => handleError(err));
 ```
 ### Node
 ```js
 const createSruClient = require('@natlibfi/sru-client').default;
 const client = createSruClient({url: 'https://foo.bar'});
-const results = await client.searchRetrieve('foo');
+
+client.searchRetrieve('foo')
+  .on('record', xmlString => processRecord(xmlString))
+  .on('end', () => endProcessing())
+  .on('error', err => handleError(err));
 ```
 
 ## License and copyright

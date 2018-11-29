@@ -31,26 +31,26 @@
 		"lint": "eslint --fix src",
 		"test": "npm run lint",
 		"clean": "rimraf build dist",
-		"build:transpile": "npm run clean && babel src --source-maps --out-dir=dist --minified",
+		"build:transpile": "npm run clean && babel src --source-maps --out-dir=dist",
 		"build": "npm run build:transpile && npm run check-deps",
 		"watch:test": "cross-env DEBUG=1 NODE_ENV=debug chokidar src -c 'npm test && npm run build'",
 		"publish-to-npm": "npm install && npm test && npm publish --access=public"
 	},
 	"dependencies": {
-		"node-fetch": "^2.2.0",
-		"xmldom": "^0.x.x"
+		"node-fetch": "^2.3.0",
+		"xmldom": ">=0.1.27 <1.0.0"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.26.0",
-		"babel-eslint": "^8.2.6",
-		"babel-preset-env": "^1.6.1",
+		"babel-eslint": "^10.0.1",
+		"babel-preset-env": "^1.7.0",
 		"babel-register": "^6.26.0",
-		"chokidar-cli": "^1.2.0",
+		"chokidar-cli": "^1.2.1",
 		"cross-env": "^5.2.0",
-		"eslint": "^5.2.0",
-		"eslint-config-xo": "0.x.x",
-		"eslint-plugin-import": "^2.13.0",
-		"npm-check": "^5.7.1",
+		"eslint": "^5.9.0",
+		"eslint-config-xo": ">=0.25.0 <1.0.0",
+		"eslint-plugin-import": "^2.14.0",
+		"npm-check": "^5.9.0",
 		"rimraf": "^2.6.2"
 	},
 	"eslintConfig": {
