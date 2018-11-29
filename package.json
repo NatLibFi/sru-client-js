@@ -20,7 +20,7 @@
 		"url": "git@github.com:natlibfi/sru-client.git"
 	},
 	"license": "LGPL-3.0+",
-	"version": "2.0.1",
+	"version": "3.0.0",
 	"main": "./dist/index.js",
 	"engines": {
 		"node": ">=7"
