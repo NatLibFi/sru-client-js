@@ -23,7 +23,7 @@
 	"version": "3.0.0",
 	"main": "./dist/index.js",
 	"engines": {
-		"node": ">=7"
+		"node": ">=8"
 	},
 	"scripts": {
 		"prepublishOnly": "npm run build:transpile",
@@ -74,7 +74,7 @@
 				"env",
 				{
 					"targets": {
-						"node": "7"
+						"node": "8"
 					}
 				}
 			]
