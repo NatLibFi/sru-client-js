@@ -47,11 +47,16 @@ export default function ({serverUrl, version, maximumRecords, recordSchema}) {
 		searchRetrieve
 	};
 
-	function searchRetrieve(query) {
+	function searchRetrieve(args) {
+		const {query, offset} = parseArgs();
 		const Emitter = new SearchRetrieveEmitter();
 
-		pump();
+		pump(offset);
 		return Emitter;
+
+		function parseArgs() {
+			return typeof args === 'string' ? {query: args} : args;
+		}
 
 		async function pump(startRecord = 1) {
 			try {
@@ -60,28 +65,32 @@ export default function ({serverUrl, version, maximumRecords, recordSchema}) {
 				const serializer = new XMLSerializer();
 				const doc = new DOMParser().parseFromString(await response.text());
 
-				if (Number(doc.getElementsByTagName('zs:numberOfRecords').item(0).textContent) > 0) {
-					const records = doc.getElementsByTagName('zs:record');
+				try {
+					if (Number(doc.getElementsByTagName('zs:numberOfRecords').item(0).textContent) > 0) {
+						const records = doc.getElementsByTagName('zs:record');
 
-					for (let i = 0; i < records.length; i++) {
-						const record = records.item(i);
+						for (let i = 0; i < records.length; i++) {
+							const record = records.item(i);
 
-						for (let k = 0; k < record.childNodes.length; k++) {
-							const childNode = record.childNodes.item(k);
+							for (let k = 0; k < record.childNodes.length; k++) {
+								const childNode = record.childNodes.item(k);
 
-							if (childNode.localName === 'recordData') {
-								Emitter.emit('record', serializer.serializeToString(childNode));
+								if (childNode.localName === 'recordData') {
+									Emitter.emit('record', serializer.serializeToString(childNode));
+								}
 							}
 						}
-					}
 
-					if (doc.getElementsByTagName('zs:nextRecordPosition').length > 0) {
-						pump(Number(doc.getElementsByTagName('zs:nextRecordPosition').textContent));
+						if (doc.getElementsByTagName('zs:nextRecordPosition').length > 0) {
+							pump(Number(doc.getElementsByTagName('zs:nextRecordPosition').textContent));
+						} else {
+							Emitter.emit('end');
+						}
 					} else {
 						Emitter.emit('end');
 					}
-				} else {
-					Emitter.emit('end');
+				} catch (err) {
+					Emitter.emit('error', doc.toString());
 				}
 			} catch (err) {
 				Emitter.emit('error', err);
