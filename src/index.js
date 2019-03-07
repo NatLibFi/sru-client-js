@@ -26,6 +26,8 @@
 *
 */
 
+// eslint-disable max-depth
+
 import {EventEmitter} from 'events';
 import fetch from 'node-fetch';
 import {DOMParser, XMLSerializer} from 'xmldom';
@@ -40,51 +42,46 @@ export default function ({serverUrl, version, maximumRecords, recordSchema}) {
 	version = version || DEFAULT_VERSION;
 	maximumRecords = maximumRecords || MAXIMUM_RECORDS;
 	recordSchema = recordSchema || RECORD_SCHEMA;
-	
+
 	return {
 		searchRetrieve
 	};
-	
+
 	function searchRetrieve(query) {
 		const Emitter = new SearchRetrieveEmitter();
-		
+
 		pump();
 		return Emitter;
-		
+
 		async function pump(startRecord = 1) {
 			try {
-				let lastRecordPosition;
 				const url = `${serverUrl}?operation=searchRetrieve&version=${version}&maximumRecords=${maximumRecords}&recordSchema=${recordSchema}&startRecord=${startRecord}&query=${query}`;
 				const response = await fetch(url);
 				const serializer = new XMLSerializer();
 				const doc = new DOMParser().parseFromString(await response.text());
-				
-				
-				if (doc.getElementsByTagName('zs:numberOfRecords').length > 0) {					
-					const numberOfRecords = Number(doc.getElementsByTagName('zs:numberOfRecords').item(0).textContent);
+
+				if (Number(doc.getElementsByTagName('zs:numberOfRecords').item(0).textContent) > 0) {
 					const records = doc.getElementsByTagName('zs:record');
-					
+
 					for (let i = 0; i < records.length; i++) {
 						const record = records.item(i);
-						
+
 						for (let k = 0; k < record.childNodes.length; k++) {
 							const childNode = record.childNodes.item(k);
-							
+
 							if (childNode.localName === 'recordData') {
 								Emitter.emit('record', serializer.serializeToString(childNode));
-							} else if (childNode.localName === 'recordPosition' && i === records.length - 1) {
-								lastRecordPosition = Number(childNode.textContent);
 							}
 						}
 					}
-					
-					if (lastRecordPosition < numberOfRecords) {
-						pump(lastRecordPosition + 1);
+
+					if (doc.getElementsByTagName('zs:nextRecordPosition').length > 0) {
+						pump(Number(doc.getElementsByTagName('zs:nextRecordPosition').textContent));
 					} else {
 						Emitter.emit('end');
 					}
 				} else {
-					Emitter.emit('error', `Unexpected document: ${doc.toString()}`);
+					Emitter.emit('end');
 				}
 			} catch (err) {
 				Emitter.emit('error', err);
