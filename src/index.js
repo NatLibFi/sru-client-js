@@ -55,7 +55,12 @@ export default function ({serverUrl, version, maximumRecords, recordSchema}) {
 		return Emitter;
 
 		function parseArgs() {
-			return typeof args === 'string' ? {query: args} : args;
+			const {query, offset} = typeof args === 'string' ? {query: args} : args;
+
+			return {
+				offset,
+				query: encodeURIComponent(query)
+			};
 		}
 
 		async function pump(startRecord = 1) {
