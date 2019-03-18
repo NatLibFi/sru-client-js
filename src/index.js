@@ -95,7 +95,7 @@ export default function ({serverUrl, version, maximumRecords, recordSchema}) {
 						Emitter.emit('end');
 					}
 				} catch (err) {
-					Emitter.emit('error', doc.toString());
+					Emitter.emit('error', err);
 				}
 			} catch (err) {
 				Emitter.emit('error', err);
