@@ -71,8 +71,8 @@ export default function ({serverUrl, version, maximumRecords, recordSchema}) {
 				const doc = new DOMParser().parseFromString(await response.text());
 
 				try {
-					if (Number(doc.getElementsByTagName('zs:numberOfRecords').item(0).textContent) > 0) {
-						const records = doc.getElementsByTagName('zs:record');
+					if (Number(doc.getElementsByTagNameNS('http://www.loc.gov/zing/srw/', 'numberOfRecords').item(0).textContent) > 0) {
+						const records = doc.getElementsByTagNameNS('http://www.loc.gov/zing/srw/', 'record');
 
 						for (let i = 0; i < records.length; i++) {
 							const record = records.item(i);
@@ -86,8 +86,8 @@ export default function ({serverUrl, version, maximumRecords, recordSchema}) {
 							}
 						}
 
-						if (doc.getElementsByTagName('zs:nextRecordPosition').length > 0) {
-							pump(Number(doc.getElementsByTagName('zs:nextRecordPosition').textContent));
+						if (doc.getElementsByTagNameNS('http://www.loc.gov/zing/srw/', 'nextRecordPosition').length > 0) {
+							pump(Number(doc.getElementsByTagNameNS('http://www.loc.gov/zing/srw/', 'nextRecordPosition').textContent));
 						} else {
 							Emitter.emit('end');
 						}
