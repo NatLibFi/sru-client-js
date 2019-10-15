@@ -87,7 +87,7 @@ export default function ({serverUrl, version, maximumRecords, recordSchema}) {
 						}
 
 						if (doc.getElementsByTagNameNS('http://www.loc.gov/zing/srw/', 'nextRecordPosition').length > 0) {
-							pump(Number(doc.getElementsByTagNameNS('http://www.loc.gov/zing/srw/', 'nextRecordPosition').textContent));
+							pump(Number(doc.getElementsByTagNameNS('http://www.loc.gov/zing/srw/', 'nextRecordPosition').item(0).textContent));
 						} else {
 							Emitter.emit('end');
 						}
