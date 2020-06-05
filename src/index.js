@@ -85,8 +85,6 @@ export default ({
           if (records) {
             emitRecords(records);
 
-            debug(nextRecordOffset);
-
             if (typeof nextRecordOffset === 'number') {
               if (retrieveAll) {
                 return iterate(nextRecordOffset);
@@ -118,14 +116,13 @@ export default ({
             return {};
           }
 
+
           const records = payload['zs:searchRetrieveResponse']['zs:records'][0]['zs:record'];
           const lastOffset = Number(records.slice(-1)[0]['zs:recordPosition'][0]);
 
           if (lastOffset === totalNumberOfRecords) {
             return {records};
           }
-
-          debug(`${lastOffset}.${totalNumberOfRecords}`);
 
           return {records, nextRecordOffset: lastOffset + 1};
 
