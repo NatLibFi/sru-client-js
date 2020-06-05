@@ -1,6 +1,6 @@
 {
 	"name": "@natlibfi/sru-client",
-	"description": "SRU client for Node.js and browser",
+	"description": "SRU Javascript client library",
 	"author": {
 		"name": "The National Library of Finland"
 	},
@@ -11,73 +11,96 @@
 		"marc",
 		"code4lib"
 	],
-	"homepage": "https://github.com/natlibfi/sru-client",
+	"homepage": "https://github.com/natlibfi/sru-client-js",
 	"bugs": {
-		"url": "https://github.com/natlibfi/sru-client/issues"
+		"url": "https://github.com/natlibfi/sru-client-js/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:natlibfi/sru-client.git"
+		"url": "git@github.com:natlibfi/sru-client-js.git"
 	},
 	"license": "LGPL-3.0+",
-	"version": "3.1.3",
+	"version": "4.0.0-beta.1",
 	"main": "./dist/index.js",
 	"engines": {
-		"node": ">=8"
+		"node": ">=12"
+	},
+	"publishConfig": {
+		"access": "public"
 	},
 	"scripts": {
-		"prepublishOnly": "npm run build:transpile",
-		"check-deps": "npm-check;exit 0",
-		"lint": "eslint --fix src",
-		"test": "npm run lint",
-		"clean": "rimraf build dist",
-		"build:transpile": "npm run clean && babel src --source-maps --out-dir=dist",
-		"build": "npm run build:transpile && npm run check-deps",
-		"watch:test": "cross-env DEBUG=1 NODE_ENV=debug chokidar src -c 'npm test && npm run build'",
-		"publish-to-npm": "npm install && npm test && npm publish --access=public"
+		"start": "node dist/index.js",
+		"lint": "eslint src",
+		"lint:dev": "eslint --fix src",
+		"test:base": "cross-env NODE_ENV=test nyc mocha --require @babel/register",
+		"test": "npm run lint && npm run test:base -- src/*.spec.js && npm run coverage",
+		"test:dev": "npm run lint:dev && npm run test:base -- src/*.spec.js && npm run coverage",
+		"coverage": "nyc check-coverage --per-file",
+		"build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist",
+		"watch:test": "cross-env DEBUG=1 NODE_ENV=test nodemon -w src -w test-fixtures --exec 'npm run test:dev'"
 	},
 	"dependencies": {
-		"node-fetch": "^2.3.0",
-		"xmldom": ">=0.1.27 <1.0.0"
+		"debug": "^4.1.1",
+		"http-status": "^1.4.2",
+		"node-fetch": "^2.6.0",
+		"xml2js": ">=0.4.23 <1.0.0"
 	},
 	"devDependencies": {
-		"babel-cli": "^6.26.0",
-		"babel-eslint": "^10.0.1",
-		"babel-preset-env": "^1.7.0",
-		"babel-register": "^6.26.0",
-		"chokidar-cli": "^1.2.1",
-		"cross-env": "^5.2.0",
-		"eslint": "^5.9.0",
-		"eslint-config-xo": ">=0.25.0 <1.0.0",
-		"eslint-plugin-import": "^2.14.0",
-		"npm-check": "^5.9.0",
-		"rimraf": "^2.6.2"
+		"@babel/cli": "^7.10.1",
+		"@babel/core": "^7.10.1",
+		"@babel/node": "^7.10.1",
+		"@babel/preset-env": "^7.10.1",
+		"@babel/register": "^7.10.1",
+		"@natlibfi/eslint-config-melinda-backend": "^1.0.3",
+		"@natlibfi/fixugen-http-client": "^1.0.0-alpha.1",
+		"@natlibfi/fixura": "^2.1.2",
+		"babel-eslint": "^10.1.0",
+		"babel-plugin-istanbul": "^6.0.0",
+		"chai": "^4.2.0",
+		"cross-env": "^7.0.2",
+		"eslint": "^7.0.0",
+		"mocha": "^7.1.2",
+		"nodemon": "^2.0.4",
+		"nyc": "^15.0.1"
 	},
 	"eslintConfig": {
-		"parser": "babel-eslint",
-		"plugins": [
-			"import"
-		],
-		"extends": [
-			"xo",
-			"plugin:import/errors"
-		],
-		"rules": {
-			"prefer-arrow-callback": [
-				"error"
-			]
-		}
+		"extends": "@natlibfi/melinda-backend"
 	},
 	"babel": {
 		"presets": [
 			[
-				"env",
+				"@babel/preset-env",
 				{
 					"targets": {
-						"node": "8"
+						"node": "12"
 					}
 				}
 			]
-		]
+		],
+		"env": {
+			"test": {
+				"plugins": [
+					"istanbul"
+				]
+			}
+		}
+	},
+	"nyc": {
+		"exclude": [
+			"*/*.spec.js"
+		],
+		"reporter": [
+			"lcov",
+			"html"
+		],
+		"require": [
+			"@babel/register"
+		],
+		"sourceMap": false,
+		"instrument": false,
+		"lines": 80,
+		"statements": 80,
+		"functions": 80,
+		"branches": 80
 	}
 }

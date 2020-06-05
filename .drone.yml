@@ -1,18 +1,61 @@
+---
 kind: pipeline
-name: default
-steps:
-- name: build
-  image: node:8
-  commands:
-  - npm install
-  - npm test
-  - npm run build:transpile
-- name: npm
-  image: plugins/npm
-  settings:
-    token:
-      from_secret: npm_token
-  when:
-    event: tag
+type: docker
+name: Default
+
 trigger:
-  event: [push, tag]
+  event:
+    - push
+    - tag
+
+steps:
+  - name: audit
+    image: node:12
+    commands:
+      - npm audit --package-lock-only --audit-level=moderate
+
+  - name: install
+    image: node:12
+    environment:
+      NPM_CONFIG_IGNORE_SCRIPTS: true      
+    commands:
+      - npm ci
+
+  - name: test
+    image: node:12
+    commands:
+      - npm test
+
+  - name: check-coverage
+    image: node:12
+    commands:
+      - npm run coverage
+
+  - name: build
+    image: node:12
+    commands:
+      - npm run build
+      - npm ci --production
+
+  - name: static-security-scan
+    image: quay.io/natlibfi/nodejsscan
+    commands:
+      - python /usr/src/app/cli.py -d dist
+  
+  - name: npm
+    image: plugins/npm
+    settings:
+      registry: 'https://registry.npmjs.org/'
+      token:
+        from_secret: npm_token
+    when:
+      event: tag   
+---
+kind: secret
+name: npm_token
+data: +R/O9PfxeAmnUXB/QYrqugUdxU8sWXfRJRaLD2wf3NUjmDVUbGUoAh00xsmSYMJApYEf+GOU/2xS00bIW5RD7A==
+---
+kind: signature
+hmac: 855cac1eddd5f4cc7481a3a6242e328cc12999ce60c10846df4b91a3d11a21b4
+
+...
