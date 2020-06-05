@@ -12,7 +12,7 @@ steps:
   - name: audit
     image: node:12
     commands:
-      - npm audit --package-lock-only --audit-level=moderate
+      - npm audit --package-lock-only --production --audit-level=moderate
 
   - name: install
     image: node:12
