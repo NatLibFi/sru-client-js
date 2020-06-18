@@ -63,21 +63,12 @@ trigger:
 
 steps:
 
-  - name: update-deps
-    image: node:12
-    commands:
-      - npm install --package-lock-only
-
-  - name: commit-and-push
-    image: quay.io/natlibfi/drone-plugin-git-push
+  - name: publish
+    image: quay.io/natlibfi/drone-npm-git-publish
     settings:
-      remote: ${DRONE_GIT_SSH_URL}
-      branch: next
-      commit: true
-      commit_message: 'Update dependencies'
-      author_name: natlibfi-melinda-automation
-      author_email: 65649125+natlibfi-melinda-automation@users.noreply.github.com
-      ssh_key:
+      git_user_name: natlibfi-melinda-automation
+      git_user_email: 65649125+natlibfi-melinda-automation@users.noreply.github.com
+      git_ssh_key:
         from_secret: github_deploy_key
 ---        
 kind: secret
