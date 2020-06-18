@@ -16,8 +16,8 @@ steps:
         from_secret: github_deploy_key
     commands:
       - echo $FOO > test
-      - du -b test
-      
+      - du test
+
   - name: audit
     image: node:12
     commands:
