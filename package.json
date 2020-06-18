@@ -52,7 +52,7 @@
 		"@babel/preset-env": "^7.10.1",
 		"@babel/register": "^7.10.1",
 		"@natlibfi/eslint-config-melinda-backend": "^1.0.3",
-		"@natlibfi/fixugen-http-client": "^1.0.0-alpha.1",
+		"@natlibfi/fixugen-http-client": "^1.0.0",
 		"@natlibfi/fixura": "^2.1.2",
 		"babel-eslint": "^10.1.0",
 		"babel-plugin-istanbul": "^6.0.0",
