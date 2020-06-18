@@ -78,4 +78,4 @@ data: +R/O9PfxeAmnUXB/QYrqugUdxU8sWXfRJRaLD2wf3NUjmDVUbGUoAh00xsmSYMJApYEf+GOU/2
 ---
 kind: secret
 name: github_deploy_key
-data: foobarJea+/KjCx2qJhlpgaUgJXULPn1MnKrTSGreUMT+MvV7INg==
+data: FazPmQLGIl9tcq1sXDcVu44IP4U/xOkZvX5lcSAPF0M2aA==
