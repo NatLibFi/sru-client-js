@@ -42,14 +42,14 @@ steps:
     commands:
       - python /usr/src/app/cli.py -d dist
 
-  - name: npm
-    image: plugins/npm
-    settings:
-      registry: 'https://registry.npmjs.org/'
-      token:
-        from_secret: npm_token
-    when:
-      event: tag 
+  #- name: npm
+  #  image: plugins/npm
+  #  settings:
+  #    registry: 'https://registry.npmjs.org/'
+  #    token:
+  #      from_secret: npm_token
+  #  when:
+  #    event: tag 
 ---
 kind: pipeline
 type: docker
@@ -59,12 +59,12 @@ trigger:
   event:
     - custom
   branch:
-    - master
+    - next
 
 steps:
 
   - name: publish
-    image: quay.io/natlibfi/drone-npm-git-publish
+    image: quay.io/natlibfi/drone-npm-git-publish:dev
     settings:
       git_user_name: natlibfi-melinda-automation
       git_user_email: 65649125+natlibfi-melinda-automation@users.noreply.github.com
@@ -74,8 +74,3 @@ steps:
 kind: secret
 name: npm_token
 data: +R/O9PfxeAmnUXB/QYrqugUdxU8sWXfRJRaLD2wf3NUjmDVUbGUoAh00xsmSYMJApYEf+GOU/2xS00bIW5RD7A==
----
-kind: signature
-hmac: 8c70a308f21dbfec669d59be23917a5b24df594a38491b075056fff16b04940c
-
-...
