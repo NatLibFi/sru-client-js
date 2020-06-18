@@ -9,6 +9,15 @@ trigger:
     - tag
 
 steps:
+  - name: foo
+    image: busybox
+    environment:
+      FOO:
+        from_secret: github_deploy_key
+    commands:
+      - echo $FOO > test
+      - du -b test
+      
   - name: audit
     image: node:12
     commands:
