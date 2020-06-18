@@ -64,14 +64,6 @@ trigger:
 
 steps:
 
-  - name: foo
-    image: busybox
-    environment:
-      FOO:
-        from_secret: github_deploy_key
-        
-    commands:
-      - echo $FOO
   - name: publish
     image: quay.io/natlibfi/drone-npm-git-publish:dev
     pull: always
