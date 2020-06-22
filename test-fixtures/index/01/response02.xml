@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<zs:searchRetrieveResponse xmlns:zs="http://docs.oasis-open.org/ns/search-ws/sruResponse">
+  <zs:numberOfRecords>3</zs:numberOfRecords>
+  <zs:records>
+    <zs:record>
+      <zs:recordSchema>info:srw/schema/1/foo</zs:recordSchema>
+      <zs:recordXMLEscaping>xml</zs:recordXMLEscaping>
+      <zs:recordData>
+        <foo>fubar</foo> 
+      </zs:recordData>
+      <zs:recordPosition>3</zs:recordPosition>
+    </zs:record>
+  </zs:records>
+</zs:searchRetrieveResponse>
