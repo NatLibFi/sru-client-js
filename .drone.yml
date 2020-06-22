@@ -48,7 +48,7 @@ steps:
     settings:
       registry: 'https://registry.npmjs.org/'
       token:
-        from_secret: npm_tokenasdas
+        from_secret: npm_token
     when:
       event: tag 
 ---
@@ -60,13 +60,12 @@ trigger:
   event:
     - custom
   branch:
-    - next
+    - master
 
 steps:
 
   - name: publish
     image: quay.io/natlibfi/drone-npm-git-publish:dev
-    pull: always
     settings:
       git_user_name: natlibfi-melinda-automation
       git_user_email: 65649125+natlibfi-melinda-automation@users.noreply.github.com
