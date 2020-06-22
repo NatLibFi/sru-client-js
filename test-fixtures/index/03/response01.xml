@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<zs:searchRetrieveResponse xmlns:zs="http://docs.oasis-open.org/ns/search-ws/sruResponse">
+  <zs:numberOfRecords>100</zs:numberOfRecords>
+  <zs:diagnostics xmlns:diag="http://docs.oasis-open.org/ns/search-ws/diagnostic">
+    <diag:diagnostic>
+      <diag:uri>info:srw/diagnostic/1/66</diag:uri>
+      <diag:details/>
+      <diag:message>Unknown schema for retrieval</diag:message>
+    </diag:diagnostic>
+  </zs:diagnostics>
+</zs:searchRetrieveResponse>

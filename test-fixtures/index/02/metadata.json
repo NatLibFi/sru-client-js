@@ -1,0 +1,17 @@
+{
+  "description": "Should retrieve records only from the first response",  
+  "defaultParameters": {
+    "recordSchema": "foo",
+    "retrieveAll": false
+  },
+  "method": {
+    "name": "searchRetrieve"
+  },
+  "requests": [
+    {
+      "method": "get",
+      "url": "/?operation=searchRetrieve&startRecord=1&recordSchema=foo&version=2.0&maximumRecords=1000",
+      "status": 200
+    }    
+  ]  
+}
