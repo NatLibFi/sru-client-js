@@ -72,7 +72,7 @@ steps:
       git_user_email: 65649125+natlibfi-melinda-automation@users.noreply.github.com
       git_ssh_key:
         from_secret: ssh_key
-      git_ssh_key:
+      git_gpg_key:
         from_secret: gpg_key
 ---        
 kind: secret
