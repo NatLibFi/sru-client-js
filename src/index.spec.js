@@ -30,6 +30,9 @@ import createClient from '.';
 import {expect} from 'chai';
 import {READERS} from '@natlibfi/fixura';
 import generateTests from '@natlibfi/fixugen-http-client';
+import createDebugLogger from 'debug';
+
+const debug = createDebugLogger('@natlibfi/sru-client:test');
 
 generateTests({
   callback,
@@ -43,13 +46,17 @@ function callback({getFixture, defaultParameters, method, error}) {
   const expectedRecords = getFixture({components: ['expected-records.json'], reader: READERS.JSON});
   const expectedNextOffset = getFixture('expected-next-offset.txt');
   const expectedError = getFixture('expected-error.txt');
+  const expectedTotalCount = getFixture('expected-total-count.txt');
 
   let recordCount = 0; // eslint-disable-line functional/no-let
+  const records = []; // eslint-disable-line functional/no-let
+
   const client = createClient({...defaultParameters, url: 'http://foo.bar'});
 
   return new Promise((resolve, reject) => {
     client[method.name](method.parameters)
       .on('error', err => {
+        debug(`Got error ${err}`);
         try {
           if (expectedError) {
             expect(err.message).to.match(new RegExp(expectedError, 'u'));
@@ -62,6 +69,9 @@ function callback({getFixture, defaultParameters, method, error}) {
         }
       })
       .on('record', record => {
+        debug(`Got record ${recordCount}: ${record}`);
+        // eslint-disable-next-line functional/immutable-data
+        records.push(record);
         try {
           expect(expectedRecords[recordCount]).to.equal(record);
           recordCount++; // eslint-disable-line no-plusplus
@@ -69,9 +79,25 @@ function callback({getFixture, defaultParameters, method, error}) {
           reject(err);
         }
       })
+      .on('total', totalNumberOfRecords => {
+        debug(`Got total: ${totalNumberOfRecords}`);
+        try {
+          expect(Number(expectedTotalCount)).to.equal(totalNumberOfRecords);
+        } catch (err) {
+          reject(err);
+        }
+      })
+
+      // eslint-disable-next-line max-statements
       .on('end', nextOffset => {
+        debug(`Got end, nextOffset: ${nextOffset}`);
+        debug(`Fetched records: (${records.length}): ${JSON.stringify(records)}`);
+        debug(`Expected records: (${expectedRecords.length}): ${JSON.stringify(expectedRecords)}`);
+        expect(expectedRecords).to.eql(records);
+
         try {
           if (nextOffset) {
+            debug('Got nextOffset');
             expect(Number(expectedNextOffset)).to.eql(nextOffset);
             return resolve();
           }
@@ -79,7 +105,6 @@ function callback({getFixture, defaultParameters, method, error}) {
           if (nextOffset) { // eslint-disable-line functional/no-conditional-statement
             throw new Error(`Unexpected next offset: ${nextOffset}`);
           }
-
           resolve();
         } catch (err) {
           reject(err);
