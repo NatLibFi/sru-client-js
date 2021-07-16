@@ -1,5 +1,5 @@
 {
-  "description": "Should retrieve search result of 0 records",  
+  "description": "Should retrieve correct total number of records",  
   "defaultParameters": {
     "recordSchema": "foo"
   },
@@ -11,6 +11,11 @@
       "method": "get",
       "url": "/?operation=searchRetrieve&startRecord=1&recordSchema=foo&version=2.0&maximumRecords=1000",
       "status": 200
-    }  
+    },
+    {
+      "method": "get",
+      "url": "/?operation=searchRetrieve&startRecord=3&recordSchema=foo&version=2.0&maximumRecords=1000",
+      "status": 200
+    }          
   ]  
 }

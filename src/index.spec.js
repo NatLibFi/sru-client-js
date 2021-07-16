@@ -69,7 +69,7 @@ function callback({getFixture, defaultParameters, method, error}) {
         }
       })
       .on('record', record => {
-        debug(`Got record ${recordCount}: ${record}`);
+        debug(`Got record ${recordCount + 1}: ${record}`);
         // eslint-disable-next-line functional/immutable-data
         records.push(record);
         try {
@@ -101,6 +101,13 @@ function callback({getFixture, defaultParameters, method, error}) {
             expect(Number(expectedNextOffset)).to.eql(nextOffset);
             return resolve();
           }
+
+          /*
+          // if (nextOffset === undefined) {
+          //   expect(expectedNextOffset.to.eql('undefined'));
+          //  return resolve();
+          //}
+          */
 
           if (nextOffset) { // eslint-disable-line functional/no-conditional-statement
             throw new Error(`Unexpected next offset: ${nextOffset}`);
