@@ -95,9 +95,11 @@ export default ({
             throw new Error(error);
           }
 
-          debugData(`Emitting total: ${totalNumberOfRecords}`);
-          // Add here hasBeenSent
-          emitter.emit('total', totalNumberOfRecords);
+          // eslint-disable-next-line functional/no-conditional-statement
+          if (iteration === 1) {
+            debugData(`Emitting total: ${totalNumberOfRecords}`);
+            emitter.emit('total', totalNumberOfRecords);
+          }
 
           if (records) {
             await emitRecords(records);
