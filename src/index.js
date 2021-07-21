@@ -67,7 +67,6 @@ export default ({
     const recordSchema = recordSchemaArg || recordSchemaDefault;
     const iteration = 1;
     const emitter = new Emitter();
-    debug(retrieveAll);
 
     iterate(startRecord, iteration);
     return emitter;
@@ -104,7 +103,6 @@ export default ({
             await emitRecords(records);
 
             if (typeof nextRecordOffset === 'number') {
-              debug(retrieveAll);
               if (retrieveAll === true) {
                 debug(`Continuing (retrieveAll is true) with next searchRetrive starting from ${nextRecordOffset}`);
                 return iterate(nextRecordOffset, iteration + 1);
