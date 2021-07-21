@@ -31,6 +31,9 @@ import httpStatus from 'http-status';
 import {EventEmitter} from 'events';
 import {Parser as XMLParser, Builder as XMLBuilder} from 'xml2js';
 import createDebugLogger from 'debug';
+import {promisify} from 'util';
+
+const setTimeoutPromise = promisify(setTimeout); // eslint-disable-line
 
 export const recordFormats = {
   object: 'object',
@@ -49,6 +52,7 @@ export default ({
   const debug = createDebugLogger('@natlibfi/sru-client');
   const debugData = debug.extend('data');
 
+  debug(retrieveAll);
   const formatRecord = createFormatter();
 
   class Emitter extends EventEmitter {
@@ -63,6 +67,7 @@ export default ({
     const recordSchema = recordSchemaArg || recordSchemaDefault;
     const iteration = 1;
     const emitter = new Emitter();
+    debug(retrieveAll);
 
     iterate(startRecord, iteration);
     return emitter;
@@ -92,17 +97,19 @@ export default ({
           }
 
           debugData(`Emitting total: ${totalNumberOfRecords}`);
+          // Add here hasBeenSent
           emitter.emit('total', totalNumberOfRecords);
 
           if (records) {
-            emitRecords(records);
+            await emitRecords(records);
 
             if (typeof nextRecordOffset === 'number') {
-
-              if (retrieveAll) {
+              debug(retrieveAll);
+              if (retrieveAll === true) {
                 debug(`Continuing (retrieveAll is true) with next searchRetrive starting from ${nextRecordOffset}`);
                 return iterate(nextRecordOffset, iteration + 1);
               }
+
               debug(`Stopping (retrievaAll is false), there are still records to retrieve starting from ${nextRecordOffset}`);
               return emitter.emit('end', nextRecordOffset);
             }
@@ -157,12 +164,19 @@ export default ({
           }
         }
 
-        function emitRecords(records) {
+        async function emitRecords(records, promises = []) {
           const [record] = records;
 
           if (record) {
-            emitter.emit('record', formatRecord(record['zs:recordData'][0]));
-            return emitRecords(records.slice(1));
+            promises.push(formatAndEmitRecord(record['zs:recordData'][0])); // eslint-disable-line
+            return emitRecords(records.slice(1), promises);
+          }
+
+          await Promise.all(promises);
+
+          async function formatAndEmitRecord(record) {
+            const formatedRecord = await formatRecord(record);
+            emitter.emit('record', formatedRecord);
           }
         }
 
