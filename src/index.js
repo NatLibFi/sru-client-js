@@ -31,6 +31,9 @@ import httpStatus from 'http-status';
 import {EventEmitter} from 'events';
 import {Parser as XMLParser, Builder as XMLBuilder} from 'xml2js';
 import createDebugLogger from 'debug';
+import {promisify} from 'util';
+
+const setTimeoutPromise = promisify(setTimeout); // eslint-disable-line
 
 export const recordFormats = {
   object: 'object',
@@ -45,7 +48,11 @@ export default ({
   recordFormat = recordFormats.string,
   retrieveAll = true
 }) => {
+
   const debug = createDebugLogger('@natlibfi/sru-client');
+  const debugData = debug.extend('data');
+
+  debug(retrieveAll);
   const formatRecord = createFormatter();
 
   class Emitter extends EventEmitter {
@@ -58,41 +65,56 @@ export default ({
 
   function searchRetrieve(query, {startRecord = 1, recordSchema: recordSchemaArg} = {}) {
     const recordSchema = recordSchemaArg || recordSchemaDefault;
+    const iteration = 1;
     const emitter = new Emitter();
 
-    iterate(startRecord);
+    iterate(startRecord, iteration);
     return emitter;
 
-    async function iterate(startRecord) {
+    async function iterate(startRecord, iteration) {
       try {
         await processRequest(startRecord);
       } catch (err) {
         return emitter.emit('error', err);
       }
 
+      // eslint-disable-next-line max-statements
       async function processRequest(startRecord) {
         const url = generateUrl({operation: 'searchRetrieve', query, startRecord, recordSchema, version, maximumRecords: maxRecordsPerRequest});
-        debug(`Sending request: ${url.toString()}`);
+        debug(`Sending request-${iteration}: ${url.toString()}`);
         const response = await fetch(url);
+        debugData(response.status);
 
         if (response.status === httpStatus.OK) {
-          const {records, error, nextRecordOffset} = await parsePayload(response);
+          const {records, error, nextRecordOffset, totalNumberOfRecords} = await parsePayload(response);
+          const numberOfRecords = Array.isArray(records) ? records.length : 0;
+          const endRecord = isNaN(nextRecordOffset) ? totalNumberOfRecords : nextRecordOffset - 1;
+          debug(`Request-${iteration} got records ${startRecord}-${endRecord} (${numberOfRecords}) out of total ${totalNumberOfRecords}.`);
 
           if (error) { // eslint-disable-line functional/no-conditional-statement
             throw new Error(error);
           }
 
+          // eslint-disable-next-line functional/no-conditional-statement
+          if (iteration === 1) {
+            debugData(`Emitting total: ${totalNumberOfRecords}`);
+            emitter.emit('total', totalNumberOfRecords);
+          }
+
           if (records) {
-            emitRecords(records);
+            await emitRecords(records);
 
             if (typeof nextRecordOffset === 'number') {
-              if (retrieveAll) {
-                return iterate(nextRecordOffset);
+              if (retrieveAll === true) {
+                debug(`Continuing (retrieveAll is true) with next searchRetrive starting from ${nextRecordOffset}`);
+                return iterate(nextRecordOffset, iteration + 1);
               }
 
+              debug(`Stopping (retrievaAll is false), there are still records to retrieve starting from ${nextRecordOffset}`);
               return emitter.emit('end', nextRecordOffset);
             }
 
+            debug(`Stopping, no more records to retrieve: ${nextRecordOffset}`);
             return emitter.emit('end');
           }
 
@@ -102,6 +124,7 @@ export default ({
 
         throw new Error(`Unexpected response ${response.status}: ${await response.text()}`);
 
+        // eslint-disable-next-line max-statements
         async function parsePayload(response) {
           const payload = await parse();
           const [error] = payload['zs:searchRetrieveResponse']?.['zs:diagnostics']?.[0]?.['diag:diagnostic']?.[0]?.['diag:message'] || [];
@@ -111,9 +134,10 @@ export default ({
           }
 
           const totalNumberOfRecords = Number(payload['zs:searchRetrieveResponse']['zs:numberOfRecords'][0]);
+          debug(`Total number of records: ${totalNumberOfRecords}`);
 
           if (totalNumberOfRecords === 0) {
-            return {};
+            return {totalNumberOfRecords};
           }
 
 
@@ -121,10 +145,10 @@ export default ({
           const lastOffset = Number(records.slice(-1)[0]['zs:recordPosition'][0]);
 
           if (lastOffset === totalNumberOfRecords) {
-            return {records};
+            return {records, totalNumberOfRecords};
           }
 
-          return {records, nextRecordOffset: lastOffset + 1};
+          return {records, nextRecordOffset: lastOffset + 1, totalNumberOfRecords};
 
           async function parse() {
             const payload = await response.text();
@@ -140,12 +164,19 @@ export default ({
           }
         }
 
-        function emitRecords(records) {
+        async function emitRecords(records, promises = []) {
           const [record] = records;
 
           if (record) {
-            emitter.emit('record', formatRecord(record['zs:recordData'][0]));
-            return emitRecords(records.slice(1));
+            promises.push(formatAndEmitRecord(record['zs:recordData'][0])); // eslint-disable-line
+            return emitRecords(records.slice(1), promises);
+          }
+
+          await Promise.all(promises);
+
+          async function formatAndEmitRecord(record) {
+            const formatedRecord = await formatRecord(record);
+            emitter.emit('record', formatedRecord);
           }
         }
 

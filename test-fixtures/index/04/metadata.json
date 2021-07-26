@@ -1,8 +1,7 @@
 {
-  "description": "Should return an error for unknown recordSchema",  
+  "description": "Should retrieve search result of 0 records",  
   "defaultParameters": {
-    "recordSchema": "foo",
-    "retrieveAll": false
+    "recordSchema": "foo"
   },
   "method": {
     "name": "searchRetrieve"
@@ -12,6 +11,6 @@
       "method": "get",
       "url": "/?operation=searchRetrieve&startRecord=1&recordSchema=foo&version=2.0&maximumRecords=1000",
       "status": 200
-    }    
+    }  
   ]  
 }
