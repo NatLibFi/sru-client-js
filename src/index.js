@@ -93,9 +93,8 @@ export default ({
             } else if (tag in value) {
               value = value[tag];
               continue;
-            } else {
-              return null;
             }
+            return null;
           }
         }
         return value;
