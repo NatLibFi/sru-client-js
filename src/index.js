@@ -94,7 +94,6 @@ export default ({
               value = value[tag];
               continue;
             } else {
-              console.log(`Cannot resolve ${jpath} @ ${p}`);
               return null;
             }
           }
