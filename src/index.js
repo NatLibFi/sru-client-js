@@ -78,6 +78,30 @@ export default ({
         return emitter.emit('error', err);
       }
 
+      // namespace-agnostic json-like query of the json data
+      // returns null if the path cannot be resolved
+      // requires that the segments in the path are always namespaced
+      function jsonpath(value, jpath) {
+        let parts = jpath.split("/");
+        while (parts.length) {
+          let p = parts.shift();
+          let [, tag] = p.split(":");
+          if (value && typeof value == "object") {
+            if (p in value) {
+              value = value[p];
+              continue;
+            } else if (tag in value) {
+              value = value[tag];
+              continue;
+            } else {
+              console.log(`Cannot resolve ${jpath} @ ${p}`);
+              return null;
+            }
+          }
+        }
+        return value;
+      }
+
       // eslint-disable-next-line max-statements
       async function processRequest(startRecord) {
         const url = generateUrl({operation: 'searchRetrieve', query, startRecord, recordSchema, version, maximumRecords: maxRecordsPerRequest});
@@ -127,13 +151,13 @@ export default ({
         // eslint-disable-next-line max-statements
         async function parsePayload(response) {
           const payload = await parse();
-          const [error] = payload['zs:searchRetrieveResponse']?.['zs:diagnostics']?.[0]?.['diag:diagnostic']?.[0]?.['diag:message'] || [];
+          const [error] = jsonpath(payload, 'zs:searchRetrieveResponse/zs:diagnostics/0/diag:diagnostic/0/diag:message') || [];
 
           if (error) {
             return {error};
           }
 
-          const totalNumberOfRecords = Number(payload['zs:searchRetrieveResponse']['zs:numberOfRecords'][0]);
+          const totalNumberOfRecords = Number(jsonpath(payload, 'zs:searchRetrieveResponse/zs:numberOfRecords/0'));
           debug(`Total number of records: ${totalNumberOfRecords}`);
 
           if (totalNumberOfRecords === 0) {
@@ -141,8 +165,8 @@ export default ({
           }
 
 
-          const records = payload['zs:searchRetrieveResponse']['zs:records'][0]['zs:record'];
-          const lastOffset = Number(records.slice(-1)[0]['zs:recordPosition'][0]);
+          const records = jsonpath(payload, 'zs:searchRetrieveResponse/zs:records/0/zs:record');
+          const lastOffset = Number(jsonpath(records.slice(-1), '0/zs:recordPosition/0'));
 
           if (lastOffset === totalNumberOfRecords) {
             return {records, totalNumberOfRecords};
@@ -168,7 +192,7 @@ export default ({
           const [record] = records;
 
           if (record) {
-            promises.push(formatAndEmitRecord(record['zs:recordData'][0])); // eslint-disable-line
+            promises.push(formatAndEmitRecord(jsonpath(record, 'zs:recordData/0')));// eslint-disable-line
             return emitRecords(records.slice(1), promises);
           }
 
