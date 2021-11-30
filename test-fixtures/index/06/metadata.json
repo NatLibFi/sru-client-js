@@ -1,7 +1,8 @@
 {
-  "description": "Should retrieve search result of 0 records",  
+  "description": "Should return an error for permanent system error",  
   "defaultParameters": {
-    "recordSchema": "foo"
+    "recordSchema": "foo",
+    "retrieveAll": false
   },
   "method": {
     "name": "searchRetrieve"
@@ -11,7 +12,10 @@
       "method": "get",
       "url": "/?operation=searchRetrieve&startRecord=1&recordSchema=foo&version=2.0&maximumRecords=1000",
       "status": 200
-    }  
+    }    
   ],
-  "expectedTotalCount": "0"
+  "expectedError": {
+    "error": "^Permanent system error$",
+    "expectedErrorInstance": "SruSearchError"
+  }
 }

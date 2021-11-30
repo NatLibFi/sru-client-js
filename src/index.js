@@ -33,6 +33,8 @@ import {Parser as XMLParser, Builder as XMLBuilder} from 'xml2js';
 import createDebugLogger from 'debug';
 import {promisify} from 'util';
 
+export class SruSearchError extends Error {}
+
 const setTimeoutPromise = promisify(setTimeout); // eslint-disable-line
 
 export const recordFormats = {
@@ -75,6 +77,7 @@ export default ({
       try {
         await processRequest(startRecord);
       } catch (err) {
+        debug(JSON.stringify(err));
         return emitter.emit('error', err);
       }
 
@@ -84,6 +87,7 @@ export default ({
         debug(`Sending request-${iteration}: ${url.toString()}`);
         const response = await fetch(url);
         debugData(response.status);
+        debugData(JSON.stringify(response));
 
         if (response.status === httpStatus.OK) {
           const {records, error, nextRecordOffset, totalNumberOfRecords} = await parsePayload(response);
@@ -92,7 +96,8 @@ export default ({
           debug(`Request-${iteration} got records ${startRecord}-${endRecord} (${numberOfRecords}) out of total ${totalNumberOfRecords}.`);
 
           if (error) { // eslint-disable-line functional/no-conditional-statement
-            throw new Error(error);
+            debug(`SRU received error: ${error}`);
+            throw new SruSearchError(error);
           }
 
           // eslint-disable-next-line functional/no-conditional-statement
@@ -122,14 +127,19 @@ export default ({
           return emitter.emit('end');
         }
 
-        throw new Error(`Unexpected response ${response.status}: ${await response.text()}`);
+        const {status} = response;
+        const message = await response.text();
+        debug(`SRU non-OK response status: ${status}, message: ${message} `);
+        throw new Error(`Unexpected response ${status}: ${message}`);
 
         // eslint-disable-next-line max-statements
         async function parsePayload(response) {
           const payload = await parse();
+          debugData(JSON.stringify(payload));
           const [error] = payload['zs:searchRetrieveResponse']?.['zs:diagnostics']?.[0]?.['diag:diagnostic']?.[0]?.['diag:message'] || [];
 
           if (error) {
+            debug(`SRU response status was ${response.status}, but response contained an error ${error}`);
             return {error};
           }
 
