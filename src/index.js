@@ -33,7 +33,7 @@ import {Parser as XMLParser, Builder as XMLBuilder} from 'xml2js';
 import createDebugLogger from 'debug';
 import {promisify} from 'util';
 
-export class SruSearchError extends Error {}
+export class SruSearchError extends Error { }
 
 const setTimeoutPromise = promisify(setTimeout); // eslint-disable-line
 
@@ -135,14 +135,14 @@ export default ({
         async function parsePayload(response) {
           const payload = await parse();
           debugData(JSON.stringify(payload));
-          const [error] = pathParser(payload,'zs:searchRetrieveResponse/zs:diagnostics/0/diag:diagnostic/0/diag:message') || [];
+          const [error] = pathParser(payload, 'zs:searchRetrieveResponse/zs:diagnostics/0/diag:diagnostic/0/diag:message') || [];
 
           if (error) {
             debug(`SRU response status was ${response.status}, but response contained an error ${error}`);
             return {error};
           }
 
-          const totalNumberOfRecords = Number(pathParser(payload,'zs:searchRetrieveResponse/zs:numberOfRecords/0'));
+          const totalNumberOfRecords = Number(pathParser(payload, 'zs:searchRetrieveResponse/zs:numberOfRecords/0'));
           debug(`Total number of records: ${totalNumberOfRecords}`);
 
           if (totalNumberOfRecords === 0) {
@@ -150,8 +150,8 @@ export default ({
           }
 
 
-          const records = pathParser(payload,'zs:searchRetrieveResponse/zs:records/0/zs:record');
-          const lastOffset = Number(pathParser(records.slice(-1),'0/zs:recordPosition/0'));
+          const records = pathParser(payload, 'zs:searchRetrieveResponse/zs:records/0/zs:record');
+          const lastOffset = Number(pathParser(records.slice(-1), '0/zs:recordPosition/0'));
 
           if (lastOffset === totalNumberOfRecords) {
             return {records, totalNumberOfRecords};
@@ -177,7 +177,7 @@ export default ({
           const [record] = records;
 
           if (record) {
-            promises.push(formatAndEmitRecord(pathParser(record,'zs:recordData/0'))); // eslint-disable-line
+            promises.push(formatAndEmitRecord(pathParser(record, 'zs:recordData/0'))); // eslint-disable-line
             return emitRecords(records.slice(1), promises);
           }
 
@@ -202,7 +202,7 @@ export default ({
         // returns undefined if the path cannot be resolved
         // requires that the segments in the path are always namespaced
         function pathParser(value, path) {
-          const pathArray = path.split(/\//ug);
+          const pathArray = path.split('/');
 
           return parse(pathArray, value);
 
@@ -214,12 +214,12 @@ export default ({
 
             if (value && typeof value === 'object') {
               if (pathPart in value) {
-                return pathParser(restOfPathArray, value[pathPart]);
+                return parse(restOfPathArray, value[pathPart]);
               }
 
-              const [, tag] = pathPart.split(/\:/ug);
+              const [, tag] = pathPart.split(':');
               if (tag in value) {
-                return pathParser(restOfPathArray, value[tag]);
+                return parse(restOfPathArray, value[tag]);
               }
 
               return undefined;
