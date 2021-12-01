@@ -26,7 +26,7 @@
 *
 */
 
-import createClient from '.';
+import createClient, {SruSearchError} from '.';
 import {expect} from 'chai';
 import {READERS} from '@natlibfi/fixura';
 import generateTests from '@natlibfi/fixugen-http-client';
@@ -42,11 +42,8 @@ generateTests({
   }
 });
 
-function callback({getFixture, defaultParameters, method, error}) {
+function callback({getFixture, defaultParameters, method, error, expectedError, expectedNextOffset, expectedTotalCount}) {
   const expectedRecords = getFixture({components: ['expected-records.json'], reader: READERS.JSON});
-  const expectedNextOffset = getFixture('expected-next-offset.txt');
-  const expectedError = getFixture('expected-error.txt');
-  const expectedTotalCount = getFixture('expected-total-count.txt');
 
   let recordCount = 0; // eslint-disable-line functional/no-let
   const records = []; // eslint-disable-line functional/no-let
@@ -55,11 +52,21 @@ function callback({getFixture, defaultParameters, method, error}) {
 
   return new Promise((resolve, reject) => {
     client[method.name](method.parameters)
+      // eslint-disable-next-line max-statements
       .on('error', err => {
         debug(`Got error ${err}`);
+        // eslint-disable-next-line functional/no-conditional-statement
+        if (err instanceof SruSearchError) {
+          debug(`This is a SruSearchError`);
+        }
         try {
           if (expectedError) {
-            expect(err.message).to.match(new RegExp(expectedError, 'u'));
+            expect(err.message).to.match(new RegExp(expectedError.error, 'u'));
+            // eslint-disable-next-line functional/no-conditional-statement
+            if (expectedError.expectedErrorInstance === 'SruSearchError') {
+              debug(`This should be an ${expectedError.expectedErrorInstance}`);
+              expect(err).to.be.instanceOf(SruSearchError);
+            }
             return resolve();
           }
 

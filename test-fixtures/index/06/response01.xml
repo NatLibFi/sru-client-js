@@ -1,0 +1,10 @@
+<zs:searchRetrieveResponse xmlns:zs="http://docs.oasis-open.org/ns/search-ws/sruResponse">
+<zs:numberOfRecords>0</zs:numberOfRecords>
+<zs:diagnostics xmlns:diag="http://docs.oasis-open.org/ns/search-ws/diagnostic">
+<diag:diagnostic>
+<diag:uri>info:srw/diagnostic/1/1</diag:uri>
+<diag:details>Aleph error. Service: C9902. Code: 31. Search is not supported.</diag:details>
+<diag:message>Permanent system error</diag:message>
+</diag:diagnostic>
+</zs:diagnostics>
+</zs:searchRetrieveResponse>
