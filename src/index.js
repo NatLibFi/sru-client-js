@@ -132,18 +132,17 @@ export default ({
         debug(`SRU non-OK response status: ${status}, message: ${message} `);
         throw new Error(`Unexpected response ${status}: ${message}`);
 
-        // eslint-disable-next-line max-statements
         async function parsePayload(response) {
           const payload = await parse();
           debugData(JSON.stringify(payload));
-          const [error] = payload['zs:searchRetrieveResponse']?.['zs:diagnostics']?.[0]?.['diag:diagnostic']?.[0]?.['diag:message'] || [];
+          const [error] = pathParser(payload,'zs:searchRetrieveResponse/zs:diagnostics/0/diag:diagnostic/0/diag:message') || [];
 
           if (error) {
             debug(`SRU response status was ${response.status}, but response contained an error ${error}`);
             return {error};
           }
 
-          const totalNumberOfRecords = Number(payload['zs:searchRetrieveResponse']['zs:numberOfRecords'][0]);
+          const totalNumberOfRecords = Number(pathParser(payload,'zs:searchRetrieveResponse/zs:numberOfRecords/0'));
           debug(`Total number of records: ${totalNumberOfRecords}`);
 
           if (totalNumberOfRecords === 0) {
@@ -151,8 +150,8 @@ export default ({
           }
 
 
-          const records = payload['zs:searchRetrieveResponse']['zs:records'][0]['zs:record'];
-          const lastOffset = Number(records.slice(-1)[0]['zs:recordPosition'][0]);
+          const records = pathParser(payload,'zs:searchRetrieveResponse/zs:records/0/zs:record');
+          const lastOffset = Number(pathParser(records.slice(-1),'0/zs:recordPosition/0'));
 
           if (lastOffset === totalNumberOfRecords) {
             return {records, totalNumberOfRecords};
@@ -178,7 +177,7 @@ export default ({
           const [record] = records;
 
           if (record) {
-            promises.push(formatAndEmitRecord(record['zs:recordData'][0])); // eslint-disable-line
+            promises.push(formatAndEmitRecord(pathParser(record,'zs:recordData/0'))); // eslint-disable-line
             return emitRecords(records.slice(1), promises);
           }
 
@@ -197,6 +196,37 @@ export default ({
 
           const searchParams = new URLSearchParams(formatted);
           return `${baseUrl}?${searchParams.toString()}`;
+        }
+
+        // namespace-agnostic json-like query of the json data
+        // returns undefined if the path cannot be resolved
+        // requires that the segments in the path are always namespaced
+        function pathParser(value, path) {
+          const pathArray = path.split(/\//ug);
+
+          return parse(pathArray, value);
+
+          function parse(pathArray, value) {
+            const [pathPart, ...restOfPathArray] = pathArray;
+            if (pathPart === undefined) {
+              return value;
+            }
+
+            if (value && typeof value === 'object') {
+              if (pathPart in value) {
+                return pathParser(restOfPathArray, value[pathPart]);
+              }
+
+              const [, tag] = pathPart.split(/\:/ug);
+              if (tag in value) {
+                return pathParser(restOfPathArray, value[tag]);
+              }
+
+              return undefined;
+            }
+
+            return pathParser(restOfPathArray, value);
+          }
         }
       }
     }
