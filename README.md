@@ -4,7 +4,7 @@
 ## Retrieve all records
 ```js
 import createClient from '@natlibfi/sru-client';
-const client = createClient({url: 'https://foo.bar', recordSchema: 'marc'});
+const client = createClient({url: 'https://foo.bar', recordSchema: 'marcxml'});
 
 client.searchRetrieve('foo')
   .on('record', record => processRecord(string))
@@ -15,7 +15,7 @@ client.searchRetrieve('foo')
 ## Retrieve records only from the first response
 ```js
 import createClient from '@natlibfi/sru-client';
-const client = createClient({url: 'https://foo.bar', recordSchema: 'marc', retrieveAll: false});
+const client = createClient({url: 'https://foo.bar', recordSchema: 'marcxml', retrieveAll: false});
 
 client.searchRetrieve('foo')
   .on('record', record => processRecord(record))
@@ -26,7 +26,7 @@ client.searchRetrieve('foo')
 ## Retrieve total amount of records
 ```js
 import createClient from '@natlibfi/sru-client';
-const client = createClient({url: 'https://foo.bar', recordSchema: 'marc', maxRecordsPerRequest: 0, retrieveAll: false});
+const client = createClient({url: 'https://foo.bar', recordSchema: 'marcxml', maxRecordsPerRequest: 0, retrieveAll: false});
 
 client.searchRetrieve('foo')
   .on('total', totalNumberOfRecords => doSomething(totalNumberOfRecords))
@@ -52,6 +52,6 @@ The first parameter is the mandatory query string. Second is an optional object 
 
 ## License and copyright
 
-Copyright (c) 2015, 2017-2018, 2020-2021 **University Of Helsinki (The National Library Of Finland)**
+Copyright (c) 2015, 2017-2018, 2020-2022 **University Of Helsinki (The National Library Of Finland)**
 
 This project's source code is licensed under the terms of **GNU Lesser General Public License Version 3** or any later version.
