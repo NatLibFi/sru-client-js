@@ -149,8 +149,7 @@ export default ({
             return {totalNumberOfRecords};
           }
 
-
-          const records = pathParser(payload, 'zs:searchRetrieveResponse/zs:records/0/zs:record');
+          const records = pathParser(payload, 'zs:searchRetrieveResponse/zs:records/0/zs:record') || [];
           const lastOffset = Number(pathParser(records.slice(-1), '0/zs:recordPosition/0'));
 
           if (lastOffset === totalNumberOfRecords) {
