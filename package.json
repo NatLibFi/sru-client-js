@@ -23,7 +23,7 @@
 	"version": "5.0.4",
 	"main": "dist/index.js",
 	"engines": {
-		"node": ">=14"
+		"node": ">=18"
 	},
 	"publishConfig": {
 		"access": "public"
