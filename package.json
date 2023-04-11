@@ -20,7 +20,7 @@
 		"url": "git@github.com:natlibfi/sru-client-js.git"
 	},
 	"license": "LGPL-3.0+",
-	"version": "6.0.1",
+	"version": "6.0.2-alpha.1",
 	"main": "dist/index.js",
 	"engines": {
 		"node": ">=18"
@@ -44,24 +44,24 @@
 		"debug": "^4.3.4",
 		"http-status": "^1.6.2",
 		"node-fetch": "^2.6.9",
-		"xml2js": ">=0.4.23 <1.0.0"
+		"xml2js": ">=0.5.0 <1.0.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.21.0",
-		"@babel/core": "^7.21.0",
+		"@babel/core": "^7.21.4",
 		"@babel/node": "^7.20.7",
-		"@babel/preset-env": "^7.20.2",
+		"@babel/preset-env": "^7.21.4",
 		"@babel/register": "^7.21.0",
-		"@babel/eslint-parser": "^7.19.1",
+		"@babel/eslint-parser": "^7.21.3",
 		"@natlibfi/eslint-config-melinda-backend": "^2.0.2",
 		"@natlibfi/fixugen-http-client": "^2.0.1",
-		"@natlibfi/fixura": "^2.2.5",
+		"@natlibfi/fixura": "^3.0.0",
 		"babel-plugin-istanbul": "^6.1.1",
 		"chai": "^4.3.7",
 		"cross-env": "^7.0.3",
-		"eslint": "^8.36.0",
+		"eslint": "^8.38.0",
 		"mocha": "^10.2.0",
-		"nodemon": "^2.0.21",
+		"nodemon": "^2.0.22",
 		"nyc": "^15.1.0"
 	},
 	"eslintConfig": {
