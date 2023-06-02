@@ -111,7 +111,7 @@ export default ({
 
             if (typeof nextRecordOffset === 'number') {
               if (retrieveAll === true) {
-                debug(`Continuing (retrieveAll is true) with next searchRetrive starting from ${nextRecordOffset}`);
+                debug(`Continuing (retrieveAll is true) with next searchRetrieve starting from ${nextRecordOffset}`);
                 return iterate(nextRecordOffset, iteration + 1);
               }
 
