@@ -55,14 +55,14 @@ function callback({getFixture, defaultParameters, method, error, expectedError, 
       // eslint-disable-next-line max-statements
       .on('error', err => {
         debug(`Got error ${err}`);
-        // eslint-disable-next-line functional/no-conditional-statement
+        // eslint-disable-next-line functional/no-conditional-statements
         if (err instanceof SruSearchError) {
           debug(`This is a SruSearchError`);
         }
         try {
           if (expectedError) {
             expect(err.message).to.match(new RegExp(expectedError.error, 'u'));
-            // eslint-disable-next-line functional/no-conditional-statement
+            // eslint-disable-next-line functional/no-conditional-statements
             if (expectedError.expectedErrorInstance === 'SruSearchError') {
               debug(`This should be an ${expectedError.expectedErrorInstance}`);
               expect(err).to.be.instanceOf(SruSearchError);
@@ -116,7 +116,7 @@ function callback({getFixture, defaultParameters, method, error, expectedError, 
           //}
           */
 
-          if (nextOffset) { // eslint-disable-line functional/no-conditional-statement
+          if (nextOffset) { // eslint-disable-line functional/no-conditional-statements
             throw new Error(`Unexpected next offset: ${nextOffset}`);
           }
           resolve();
