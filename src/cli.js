@@ -41,7 +41,7 @@ function run() {
     // Comment: console.log(record);
     recordCounter++; //eslint-disable-line
     console.log(`Record ${recordCounter}/${recordTotal}`);
-    // eslint-disable-next-line functional/no-conditional-statement
+    // eslint-disable-next-line functional/no-conditional-statements
     if (outputRecord) {
       console.log(record);
     }

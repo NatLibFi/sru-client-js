@@ -95,12 +95,12 @@ export default ({
           const endRecord = isNaN(nextRecordOffset) ? totalNumberOfRecords : nextRecordOffset - 1;
           debug(`Request-${iteration} got records ${startRecord}-${endRecord} (${numberOfRecords}) out of total ${totalNumberOfRecords}.`);
 
-          if (error) { // eslint-disable-line functional/no-conditional-statement
+          if (error) { // eslint-disable-line functional/no-conditional-statements
             debug(`SRU received error: ${error}`);
             throw new SruSearchError(error);
           }
 
-          // eslint-disable-next-line functional/no-conditional-statement
+          // eslint-disable-next-line functional/no-conditional-statements
           if (iteration === 1) {
             debugData(`Emitting total: ${totalNumberOfRecords}`);
             emitter.emit('total', totalNumberOfRecords);
