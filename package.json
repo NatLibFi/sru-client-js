@@ -44,7 +44,7 @@
 		"debug": "^4.3.4",
 		"http-status": "^1.6.2",
 		"node-fetch": "^2.6.12",
-		"xml2js": ">=0.6.0 <1.0.0"
+		"xml2js": ">=0.6.2 <1.0.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.22.9",
@@ -54,8 +54,8 @@
 		"@babel/register": "^7.22.5",
 		"@babel/eslint-parser": "^7.22.9",
 		"@natlibfi/eslint-config-melinda-backend": "^3.0.0",
-		"@natlibfi/fixugen-http-client": "^2.0.1",
-		"@natlibfi/fixura": "^3.0.0",
+		"@natlibfi/fixugen-http-client": "^3.0.0",
+		"@natlibfi/fixura": "^3.0.1",
 		"babel-plugin-istanbul": "^6.1.1",
 		"chai": "^4.3.7",
 		"cross-env": "^7.0.3",
