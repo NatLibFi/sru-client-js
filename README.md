@@ -67,6 +67,6 @@ The first parameter is the mandatory CQL query string. Second is an optional obj
 
 ## License and copyright
 
-Copyright (c) 2015, 2017-2018, 2020-2022 **University Of Helsinki (The National Library Of Finland)**
+Copyright (c) 2015, 2017-2018, 2020-2023 **University Of Helsinki (The National Library Of Finland)**
 
 This project's source code is licensed under the terms of **GNU Lesser General Public License Version 3** or any later version.
