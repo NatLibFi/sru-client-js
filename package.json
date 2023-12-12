@@ -20,7 +20,7 @@
 		"url": "git@github.com:natlibfi/sru-client-js.git"
 	},
 	"license": "LGPL-3.0+",
-	"version": "6.0.6",
+	"version": "6.0.7-alpha.1",
 	"main": "dist/index.js",
 	"engines": {
 		"node": ">=18"
@@ -48,9 +48,9 @@
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.23.4",
-		"@babel/core": "^7.23.5",
+		"@babel/core": "^7.23.6",
 		"@babel/node": "^7.22.19",
-		"@babel/preset-env": "^7.23.5",
+		"@babel/preset-env": "^7.23.6",
 		"@babel/register": "^7.22.15",
 		"@natlibfi/eslint-config-melinda-backend": "^3.0.3",
 		"@natlibfi/fixugen-http-client": "^3.0.2",
@@ -58,9 +58,9 @@
 		"babel-plugin-istanbul": "^6.1.1",
 		"chai": "^4.3.10",
 		"cross-env": "^7.0.3",
-		"eslint": "^8.54.0",
+		"eslint": "^8.55.0",
 		"mocha": "^10.2.0",
-		"nodemon": "^3.0.1",
+		"nodemon": "^3.0.2",
 		"nyc": "^15.1.0"
 	},
 	"eslintConfig": {
