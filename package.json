@@ -31,14 +31,16 @@
 	"scripts": {
 		"start": "node dist/index.js",
 		"prepare": "npm run build",
-		"lint": "eslint src",
-		"lint:dev": "eslint --fix src",
-		"test:base": "cross-env NODE_ENV=test nyc mocha --require @babel/register",
-		"test": "npm run lint && npm run test:base -- src/*.spec.js && npm run coverage",
-		"test:dev": "npm run lint:dev && npm run test:base -- src/*.spec.js && npm run coverage",
-		"coverage": "nyc check-coverage --per-file",
 		"build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist",
-		"watch:test": "cross-env DEBUG=1 NODE_ENV=test nodemon -w src -w test-fixtures --exec 'npm run test:dev'"
+		"lint": "eslint ./src",
+		"lint:dev": "eslint --fix ./src",
+		"test:base": "cross-env NODE_ENV=test nyc mocha --package ./package.json",
+		"test": "npm run lint && npm run test:base && npm run coverage",
+		"test:dev": "npm run lint:dev && npm run test:base && npm run coverage",
+		"coverage": "nyc check-coverage --per-file",
+		"watch:test": "cross-env DEBUG=@natlibfi/* NODE_ENV=test nodemon",
+		"dev": "nodemon",
+		"dev:debug": "cross-env LOG_LEVEL=debug DEBUG=@natlibfi/* NODE_ENV=test nodemon"
 	},
 	"dependencies": {
 		"debug": "^4.3.4",
@@ -83,22 +85,39 @@
 			}
 		}
 	},
+	"mocha": {
+	  "spec": [
+		"src/*.spec.js",
+		"src/**/*.spec.js"
+	  ],
+	  "require": [
+		"@babel/register"
+	  ],
+	  "inline-diffs": true,
+	  "maxDiffSize": 25000,
+	  "bail": true,
+	  "exit": true
+	},
+	"nodemonConfig": {
+	  "exec": "npm run test:dev",
+	  "watch": [
+		"src/*",
+		"test-fixtures/*"
+	  ]
+	},
 	"nyc": {
-		"exclude": [
-			"*/*.spec.js"
-		],
-		"reporter": [
-			"lcov",
-			"html"
-		],
-		"require": [
-			"@babel/register"
-		],
-		"sourceMap": false,
-		"instrument": false,
-		"lines": 80,
-		"statements": 80,
-		"functions": 80,
-		"branches": 80
+	  "exclude": [
+		"src/*.spec.js",
+		"src/**/*.spec.js"
+	  ],
+	  "reporter": [
+		"text"
+	  ],
+	  "sourceMap": false,
+	  "instrument": false,
+	  "lines": 80,
+	  "statements": 80,
+	  "functions": 80,
+	  "branches": 80
 	}
-}
+  }
