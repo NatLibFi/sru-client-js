@@ -57,7 +57,7 @@ export default ({
       async function processRequest(startRecord) {
         const url = generateUrl({operation: 'searchRetrieve', query, startRecord, recordSchema, version, maximumRecords: maxRecordsPerRequest});
         debug(`Sending request-${iteration}: ${url.toString()}`);
-        const response = await fetch(url);
+        const response = await fetch(url, {headers: {"Cache-control": "no-cache"}});
         debugData(response.status);
         debugData(JSON.stringify(response));
 
