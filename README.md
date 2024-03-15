@@ -65,6 +65,8 @@ The first parameter is the mandatory CQL query string. Second is an optional obj
 - The **totalNumberOfRecords** returned by the **total** event is limited to the maximum number of records provided by server. Ie. if the SRU servers limit for search and retrieve is 20 000 records, 20 000 is the maximum totalNumberOfRecords available, even if the server's database actually contains more records matching the query.
 - The library uses module [debug](https://www.npmjs.com/package/debug) to optionally emit debugging information.
 
+- Cli use needs enviroment variable SRU_URL
+
 ## License and copyright
 
 Copyright (c) 2015, 2017-2018, 2020-2024 **University Of Helsinki (The National Library Of Finland)**
