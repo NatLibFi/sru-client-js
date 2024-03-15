@@ -59,6 +59,6 @@ function run() {
 }
 
 function help() {
-  const help = 'cli.js query,outputRecord,retrieveAll,recordSchema\n\t- query: sru query (mandatory)\n\t- outputRecord: true/false (default true)\n\t- retrieveAll true/false (default true),\n\t- recordSchema: recordSchema (default marcxml)\nEnvironment variable SRU_URL must be set!\ncli.js help - this help';
+  const help = 'cli.js query,outputRecord,retrieveAll,recordSchema\n\t- query: sru query (mandatory) - e.g. "rec.id=001234567"\n\t- outputRecord: true/false (default true)\n\t- retrieveAll true/false (default true),\n\t- recordSchema: recordSchema (default marcxml)\nEnvironment variable SRU_URL must be set!\ncli.js help - this help';
   console.log(help);
 }
