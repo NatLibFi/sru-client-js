@@ -5,7 +5,7 @@ run();
 /* eslint-disable max-statements, no-console */
 function run() {
   const SRU_URL = process.env['SRU_URL']; // eslint-disable-line
-  const [,, rawPArgs] = process.argv;
+  const [, , rawPArgs] = process.argv;
   const pArgs = rawPArgs.split(',');
 
   if (pArgs[0].match('help')) {
@@ -59,6 +59,6 @@ function run() {
 }
 
 function help() {
-  const help = 'cli.js query,outputRecord,retrieveAll,recordSchema\n\t- query: sru query (mandatory)\n\t- outputRecord: true/false (default true)\n\t- retrieveAll true/false (default true),\n\t- recordSchema: recordSchema (default marcxml)\ncli.js help - this help';
+  const help = 'cli.js query,outputRecord,retrieveAll,recordSchema\n\t- query: sru query (mandatory) - e.g. "rec.id=001234567"\n\t- outputRecord: true/false (default true)\n\t- retrieveAll true/false (default true),\n\t- recordSchema: recordSchema (default marcxml)\nEnvironment variable SRU_URL must be set!\ncli.js help - this help';
   console.log(help);
 }
