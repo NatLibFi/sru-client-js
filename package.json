@@ -43,26 +43,26 @@
 		"dev:debug": "cross-env LOG_LEVEL=debug DEBUG=@natlibfi/* NODE_ENV=test nodemon"
 	},
 	"dependencies": {
-		"debug": "^4.3.4",
+		"debug": "^4.3.5",
 		"http-status": "^1.7.4",
 		"node-fetch": "^2.7.0",
 		"xml2js": "^0.6.2"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.24.5",
-		"@babel/core": "^7.24.5",
-		"@babel/node": "^7.23.9",
-		"@babel/preset-env": "^7.24.5",
-		"@babel/register": "^7.23.7",
-		"@natlibfi/eslint-config-melinda-backend": "^3.0.4",
-		"@natlibfi/fixugen-http-client": "^3.0.4",
-		"@natlibfi/fixura": "^3.0.4",
+		"@babel/cli": "^7.24.7",
+		"@babel/core": "^7.24.7",
+		"@babel/node": "^7.24.7",
+		"@babel/preset-env": "^7.24.7",
+		"@babel/register": "^7.24.6",
+		"@natlibfi/eslint-config-melinda-backend": "^3.0.5",
+		"@natlibfi/fixugen-http-client": "^3.0.6",
+		"@natlibfi/fixura": "^3.0.6",
 		"babel-plugin-istanbul": "^6.1.1",
 		"chai": "^4.4.1",
 		"cross-env": "^7.0.3",
 		"eslint": "^8.57.0",
 		"mocha": "^10.4.0",
-		"nodemon": "^3.1.0",
+		"nodemon": "^3.1.3",
 		"nyc": "^15.1.0"
 	},
 	"eslintConfig": {
