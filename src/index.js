@@ -58,8 +58,8 @@ export default ({
         const url = generateUrl({operation: 'searchRetrieve', query, startRecord, recordSchema, version, maximumRecords: maxRecordsPerRequest});
         debug(`Sending request-${iteration}: ${url.toString()}`);
         const response = await fetch(url, {headers: {'Cache-control': 'max-age=0, must-revalidate'}});
-        debugData(response.status);
-        debugData(JSON.stringify(response));
+        debugData(`Response status: ${response.status}`);
+        debugData(`Response: ${JSON.stringify(response)}`);
 
         if (response.status === httpStatus.OK) {
           const {records, error, nextRecordOffset, totalNumberOfRecords} = await parsePayload(response);
@@ -106,7 +106,7 @@ export default ({
 
         async function parsePayload(response) {
           const payload = await parse();
-          debugData(JSON.stringify(payload));
+          debugData(`Response payload: ${JSON.stringify(payload)}`);
           const [error] = pathParser(payload, 'zs:searchRetrieveResponse/zs:diagnostics/0/diag:diagnostic/0/diag:message') || [];
 
           if (error) {

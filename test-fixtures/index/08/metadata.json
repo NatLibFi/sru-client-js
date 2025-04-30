@@ -1,5 +1,5 @@
 {
-  "description": "Should retrieve all records",
+  "description": "Should retrieve all records, record with HTML-encoding",
   "only": false,
   "skip": false,
   "defaultParameters": {

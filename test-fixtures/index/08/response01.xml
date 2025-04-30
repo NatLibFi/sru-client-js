@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<zs:searchRetrieveResponse xmlns:zs="http://docs.oasis-open.org/ns/search-ws/sruResponse">
+  <zs:numberOfRecords>3</zs:numberOfRecords>
+  <zs:records>
+    <zs:record>
+      <zs:recordSchema>info:srw/schema/1/foo</zs:recordSchema>
+      <zs:recordXMLEscaping>xml</zs:recordXMLEscaping>
+      <zs:recordData>
+ <record xmlns="http://www.loc.gov/MARC21/slim">
+  <leader>00978cja a22002774i 4500</leader>
+  <controlfield tag="001">016059298</controlfield>
+  <controlfield tag="003">FI-MELINDA</controlfield>
+  <controlfield tag="005">20211119165210.0</controlfield>
+  <controlfield tag="007">sd||||||||p||e</controlfield>
+  <controlfield tag="008">010803s1982    xx pp|||||||||||||||fin||</controlfield>
+  <datafield tag="100" ind1="1" ind2=" ">
+    <subfield code="a">Gietz, Heinz,</subfield>
+    <subfield code="e">s&#xE4;velt&#xE4;j&#xE4;.</subfield>
+    <subfield code="0">(FI-ASTERI-N)000190324</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Hei tuokaa shamppanjaa.</subfield>
+  </datafield>
+  <datafield tag="336" ind1=" " ind2=" ">
+    <subfield code="a">esitetty musiikki</subfield>
+    <subfield code="b">prm</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield tag="337" ind1=" " ind2=" ">
+    <subfield code="a">audio</subfield>
+    <subfield code="b">s</subfield>
+    <subfield code="2">rdamedia</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Prinz Gru&#x308;newald und Perlenfein mit ihrem lieben Eselein</subfield>
+  </datafield>
+  <datafield tag="511" ind1="0" ind2=" ">
+    <subfield code="a">Wilenius, Jaana (laulu&#xE4;&#xE4;ni).</subfield>
+  </datafield>
+  <datafield tag="598" ind1=" " ind2=" ">
+    <subfield code="a">[&#xC4;&#xE4;nite].</subfield>
+  </datafield>
+  <datafield tag="773" ind1="0" ind2=" ">
+    <subfield code="7">nnjm</subfield>
+    <subfield code="w">(FI-MELINDA)015657151</subfield>
+    <subfield code="t">No sit&#xE4; sattuu. -</subfield>
+    <subfield code="h">1 &#xE4;&#xE4;nilevy. -</subfield>
+    <subfield code="o">Blue master special SPEL347</subfield>
+  </datafield>
+</record>
+      </zs:recordData>
+      <zs:recordPosition>1</zs:recordPosition>
+    </zs:record>  
+    <zs:record>
+      <zs:recordSchema>info:srw/schema/1/foo</zs:recordSchema>
+      <zs:recordXMLEscaping>xml</zs:recordXMLEscaping>
+      <zs:recordData>
+        <foo>bar</foo> 
+      </zs:recordData>
+      <zs:recordPosition>2</zs:recordPosition>
+    </zs:record>      
+  </zs:records>
+</zs:searchRetrieveResponse>
