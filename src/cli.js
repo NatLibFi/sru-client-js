@@ -19,14 +19,14 @@ function run() {
     .wrap(yargs.terminalWidth())
     .epilog('Copyright (C) 2025 University Of Helsinki (The National Library Of Finland)')
     .usage('Environment variable info in example.env')
-    .usage('Installed globally: $0 <operation> [options]')
-    .usage('Not installed: npx $0 <operation> [options]')
-    .usage('Build from source: node dist/index.js <operation> [options]')
+    .usage('Installed globally: $0 <query> [options]')
+    .usage('Not installed: npx $0 <query> [options]')
+    .usage('Build from source: node dist/index.js <query> [options]')
     .showHelpOnFail(true)
     .example([
       ['$ node dist/cli.js rec.id=001234567'],
       ['$ node dist/cli.js dc.title="malli" -s true'],
-      ['$ node dist/cli.js query']
+      ['$ node dist/cli.js <query>']
     ])
     .version()
     .env('SRU')
