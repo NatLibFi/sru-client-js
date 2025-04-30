@@ -1,7 +1,9 @@
 npm-debug.log
 node_modules
+results
 coverage
 dist
 .nyc_output
 .DS_Store
 .env
+.env*

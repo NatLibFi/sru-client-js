@@ -1,29 +1,65 @@
+import fs from 'fs';
+import yargs from 'yargs';
+import {createLogger, handleInterrupt} from '@natlibfi/melinda-backend-commons';
 import createSruClient from './index';
 
 run();
 
 /* eslint-disable max-statements, no-console */
 function run() {
-  const SRU_URL = process.env['SRU_URL']; // eslint-disable-line
-  const [, , rawPArgs] = process.argv;
-  const pArgs = rawPArgs.split(',');
+  const logger = createLogger();
 
-  if (pArgs[0].match('help')) {
-    help();
-    return;
-  }
+  process
+    .on('SIGINT', handleInterrupt)
+    .on('unhandledRejection', handleInterrupt)
+    .on('uncaughtException', handleInterrupt);
 
-  const outputRecord = !(pArgs[1] === 'false' || pArgs[1] === '0');
-  const retrieveAll = !(pArgs[2] === 'false' || pArgs[2] === '0');
-  const recordSchema = pArgs[3] || 'marcxml';
-  const sruClient = createSruClient({url: SRU_URL, recordSchema, retrieveAll});
+  const args = yargs(process.argv.slice(2))
+    .scriptName('sru-cli')
+    .wrap(yargs.terminalWidth())
+    .epilog('Copyright (C) 2025 University Of Helsinki (The National Library Of Finland)')
+    .usage('Environment variable info in example.env')
+    .usage('Installed globally: $0 <operation> [options]')
+    .usage('Not installed: npx $0 <operation> [options]')
+    .usage('Build from source: node dist/index.js <operation> [options]')
+    .showHelpOnFail(true)
+    .example([
+      ['$ node dist/cli.js rec.id=001234567'],
+      ['$ node dist/cli.js dc.title="malli" -s true'],
+      ['$ node dist/cli.js query']
+    ])
+    .version()
+    .env('SRU')
+    .positional('query', {type: 'string', describe: 'sru query'})
+    .options({
+      s: {alias: 'showOutputRecord', type: 'boolean', default: false, describe: ''},
+      o: {alias: 'overwriteFiles', type: 'boolean', default: true, describe: ''},
+      a: {alias: 'retrieveAll', type: 'boolean', default: false, describe: 'Retrieve all record for query'},
+      r: {alias: 'recordSchema', type: 'marcxml', default: false, describe: 'Sru endpoint record schema'},
+      m: {alias: 'metadataFormat', type: 'string', default: 'string', describe: 'Record output schema'},
+      w: {alias: 'writeFiles', type: 'boolean', default: false, describe: 'Record output as files'}
+    })
+    .check((args) => {
+      const [query] = args._;
+      if (query === undefined) {
+        throw new Error('No query given');
+      }
+
+      return true;
+    })
+    .parseSync();
+
+  //logger.debug(JSON.stringify(args));
+  const [query] = args._;
+  const {url, showOutputRecord, writeFiles, retrieveAll, recordSchema, metadataFormat, overwriteFiles} = args;
+  const sruClient = createSruClient({url, recordSchema, retrieveAll, metadataFormat});
 
   // eslint-disable-next-line functional/no-let
   let recordCounter = 0;
   // eslint-disable-next-line functional/no-let
   let recordTotal = 0;
 
-  sruClient.searchRetrieve(pArgs[0])
+  sruClient.searchRetrieve(query)
     .on('total', onTotal)
     .on('record', onRecord)
     .on('end', onEnd)
@@ -31,9 +67,9 @@ function run() {
 
 
   function onTotal(total) {
-    console.log('********************');
     recordTotal = total;
-    console.log(total);
+    console.log('********************');
+    console.log(`Query has total of ${total} records`);
     console.log('********************');
   }
 
@@ -41,9 +77,36 @@ function run() {
     // Comment: console.log(record);
     recordCounter++; //eslint-disable-line
     console.log(`Record ${recordCounter}/${recordTotal}`);
-    // eslint-disable-next-line functional/no-conditional-statements
-    if (outputRecord) {
-      console.log(record);
+
+    if (showOutputRecord) {
+      console.log('Output:'); // eslint-disable-line
+      console.log(record); // eslint-disable-line
+    }
+
+    const folder = './results';
+
+    if (writeFiles) {
+      console.log(`Writing to file: ${folder}/${recordCounter}`); // eslint-disable-line
+      prepareFolder(folder, recordCounter);
+      fs.writeFileSync(`${folder}/${recordCounter}`, record);
+      return;
+    }
+
+    function prepareFolder(folder, fileName) {
+      if (fs.existsSync(folder)) {
+        if (overwriteFiles) {
+          return;
+        }
+
+        if (fs.existsSync(`${folder}/${fileName}`)) {
+          throw new Error(`${folder}/${fileName} allready exist`);
+        }
+
+        return;
+      }
+
+      fs.mkdirSync(folder);
+      return;
     }
   }
 
@@ -56,9 +119,4 @@ function run() {
   function onError(err) {
     console.log(`Error: ${err}`);
   }
-}
-
-function help() {
-  const help = 'cli.js query,outputRecord,retrieveAll,recordSchema\n\t- query: sru query (mandatory) - e.g. "rec.id=001234567"\n\t- outputRecord: true/false (default true)\n\t- retrieveAll true/false (default true),\n\t- recordSchema: recordSchema (default marcxml)\nEnvironment variable SRU_URL must be set!\ncli.js help - this help';
-  console.log(help);
 }

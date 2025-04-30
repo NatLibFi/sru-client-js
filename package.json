@@ -23,7 +23,7 @@
 	"version": "6.0.18",
 	"main": "dist/index.js",
 	"engines": {
-		"node": ">=18"
+		"node": ">=22"
 	},
 	"publishConfig": {
 		"access": "public"
@@ -43,6 +43,7 @@
 		"dev:debug": "cross-env LOG_LEVEL=debug DEBUG=@natlibfi/* NODE_ENV=test nodemon"
 	},
 	"dependencies": {
+		"@natlibfi/melinda-backend-commons": "^2.3.7",
 		"debug": "^4.4.0",
 		"http-status": "^2.1.0",
 		"node-fetch": "^2.7.0",
