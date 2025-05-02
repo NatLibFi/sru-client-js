@@ -6,17 +6,17 @@
       <zs:recordSchema>info:srw/schema/1/foo</zs:recordSchema>
       <zs:recordXMLEscaping>xml</zs:recordXMLEscaping>
       <zs:recordData>
-        <foo>foo</foo> 
+        <foo>foo</foo>
       </zs:recordData>
       <zs:recordPosition>1</zs:recordPosition>
-    </zs:record>  
+    </zs:record>
     <zs:record>
       <zs:recordSchema>info:srw/schema/1/foo</zs:recordSchema>
       <zs:recordXMLEscaping>xml</zs:recordXMLEscaping>
       <zs:recordData>
-        <foo>bar</foo> 
+        <foo>bar</foo>
       </zs:recordData>
       <zs:recordPosition>2</zs:recordPosition>
-    </zs:record>      
+    </zs:record>
   </zs:records>
 </zs:searchRetrieveResponse>

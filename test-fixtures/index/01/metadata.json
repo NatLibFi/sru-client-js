@@ -16,7 +16,7 @@
       "method": "get",
       "url": "/?operation=searchRetrieve&startRecord=3&recordSchema=foo&version=2.0&maximumRecords=1000",
       "status": 200
-    }        
+    }
   ],
   "expectedTotalCount": 3
 }

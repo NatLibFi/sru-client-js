@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import {EventEmitter} from 'events';
 import {Parser as XMLParser, Builder as XMLBuilder} from 'xml2js';
 import createDebugLogger from 'debug';
+import fetch from 'node-fetch';
 import {promisify} from 'util';
 import {MARCXML} from '@natlibfi/marc-record-serializers';
 

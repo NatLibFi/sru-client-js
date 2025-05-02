@@ -1,13 +1,13 @@
 import fs from 'fs';
 import yargs from 'yargs';
-import {createLogger, handleInterrupt} from '@natlibfi/melinda-backend-commons';
+import {handleInterrupt} from '@natlibfi/melinda-backend-commons';
 import createSruClient from './index';
 
 run();
 
 /* eslint-disable max-statements, no-console */
 function run() {
-  const logger = createLogger();
+  // const logger = createLogger();
 
   process
     .on('SIGINT', handleInterrupt)
@@ -78,7 +78,7 @@ function run() {
     recordCounter++; //eslint-disable-line
     console.log(`Record ${recordCounter}/${recordTotal}`);
 
-    if (showOutputRecord) {
+    if (showOutputRecord) {  // eslint-disable-line
       console.log('Output:'); // eslint-disable-line
       console.log(record); // eslint-disable-line
     }
