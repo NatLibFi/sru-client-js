@@ -43,6 +43,9 @@
 		"dev:debug": "cross-env LOG_LEVEL=debug DEBUG=@natlibfi/* NODE_ENV=test nodemon"
 	},
 	"dependencies": {
+		"@babel/runtime": "^7.27.1",
+		"@natlibfi/marc-record": "^9.1.4",
+		"@natlibfi/marc-record-serializers": "^10.1.5",
 		"@natlibfi/melinda-backend-commons": "^2.3.7",
 		"debug": "^4.4.0",
 		"http-status": "^2.1.0",

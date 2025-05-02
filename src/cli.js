@@ -36,7 +36,7 @@ function run() {
       o: {alias: 'overwriteFiles', type: 'boolean', default: true, describe: ''},
       a: {alias: 'retrieveAll', type: 'boolean', default: false, describe: 'Retrieve all record for query'},
       r: {alias: 'recordSchema', type: 'marcxml', default: false, describe: 'Sru endpoint record schema'},
-      m: {alias: 'metadataFormat', type: 'string', default: 'string', describe: 'Record output schema'},
+      m: {alias: 'metadataFormat', type: 'string', default: 'string', describe: 'Record output schema (string (xml), object, marcJson)'},
       w: {alias: 'writeFiles', type: 'boolean', default: false, describe: 'Record output as files'}
     })
     .check((args) => {
@@ -49,7 +49,7 @@ function run() {
     })
     .parseSync();
 
-  //logger.debug(JSON.stringify(args));
+  // console.log(JSON.stringify(args));
   const [query] = args._;
   const {url, showOutputRecord, writeFiles, retrieveAll, recordSchema, metadataFormat, overwriteFiles} = args;
   const sruClient = createSruClient({url, recordSchema, retrieveAll, metadataFormat});

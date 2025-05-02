@@ -3,6 +3,7 @@ import {EventEmitter} from 'events';
 import {Parser as XMLParser, Builder as XMLBuilder} from 'xml2js';
 import createDebugLogger from 'debug';
 import {promisify} from 'util';
+import {MARCXML} from '@natlibfi/marc-record-serializers';
 
 export class SruSearchError extends Error { }
 
@@ -224,6 +225,27 @@ export default ({
       return metadata => {
         const [[key, value]] = Object.entries(metadata);
         return builder.buildObject({[key]: value[0]});
+      };
+    }
+
+    if (metadataFormat === metadataFormats.marcJson) {
+      const builder = new XMLBuilder({
+        xmldec: {
+          version: '1.0',
+          encoding: 'UTF-8',
+          standalone: false
+        },
+        renderOpts: {
+          pretty: true,
+          indent: '\t'
+        }
+      });
+
+      return async metadata => {
+        const [[key, value]] = Object.entries(metadata);
+        const xmlString = builder.buildObject({[key]: value[0]});
+        const record = await MARCXML.from(xmlString, {subfieldValues: false});
+        return JSON.stringify(record.toObject());
       };
     }
 
