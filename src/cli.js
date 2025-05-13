@@ -88,7 +88,7 @@ function run() {
     if (writeFiles) {
       console.log(`Writing to file: ${folder}/${recordCounter}`); // eslint-disable-line
       prepareFolder(folder, recordCounter);
-      fs.writeFileSync(`${folder}/${recordCounter}`, record);
+      fs.writeFileSync(`${folder}/${recordCounter}`, JSON.stringify(record.toObject()));
       return;
     }
 

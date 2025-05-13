@@ -246,7 +246,7 @@ export default ({
         const [[key, value]] = Object.entries(metadata);
         const xmlString = builder.buildObject({[key]: value[0]});
         const record = await MARCXML.from(xmlString, {subfieldValues: false});
-        return JSON.stringify(record.toObject());
+        return record;
       };
     }
 
