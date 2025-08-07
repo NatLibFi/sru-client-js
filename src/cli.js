@@ -54,9 +54,7 @@ function run() {
   const {url, showOutputRecord, writeFiles, retrieveAll, recordSchema, metadataFormat, overwriteFiles} = args;
   const sruClient = createSruClient({url, recordSchema, retrieveAll, metadataFormat});
 
-  // eslint-disable-next-line functional/no-let
   let recordCounter = 0;
-  // eslint-disable-next-line functional/no-let
   let recordTotal = 0;
 
   sruClient.searchRetrieve(query)

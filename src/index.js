@@ -2,7 +2,6 @@ import httpStatus from 'http-status';
 import {EventEmitter} from 'events';
 import {Parser as XMLParser, Builder as XMLBuilder} from 'xml2js';
 import createDebugLogger from 'debug';
-import fetch from 'node-fetch';
 import {promisify} from 'util';
 import {MARCXML} from '@natlibfi/marc-record-serializers';
 
@@ -69,12 +68,11 @@ export default ({
           const endRecord = isNaN(nextRecordOffset) ? totalNumberOfRecords : nextRecordOffset - 1;
           debug(`Request-${iteration} got records ${startRecord}-${endRecord} (${numberOfRecords}) out of total ${totalNumberOfRecords}.`);
 
-          if (error) { // eslint-disable-line functional/no-conditional-statements
+          if (error) {
             debug(`SRU received error: ${error}`);
             throw new SruSearchError(error);
           }
 
-          // eslint-disable-next-line functional/no-conditional-statements
           if (iteration === 1) {
             debugData(`Emitting total: ${totalNumberOfRecords}`);
             emitter.emit('total', totalNumberOfRecords);
@@ -150,7 +148,7 @@ export default ({
           const [record, ...rest] = records;
 
           if (record !== undefined) {
-            promises.push(formatAndEmitRecord(pathParser(record, 'zs:recordData/0'))); // eslint-disable-line
+            promises.push(formatAndEmitRecord(pathParser(record, 'zs:recordData/0')));
             return emitRecords(rest, promises);
           }
 
