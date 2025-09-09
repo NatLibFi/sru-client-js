@@ -20,7 +20,7 @@ export default ({
   recordSchema: recordSchemaDefault,
   version = '2.0',
   maxRecordsPerRequest = 1000,
-  metadataFormat = metadataFormats.string,
+  metadataFormat = metadataFormats.string, // Renamed from 'recordFormat' in v7
   retrieveAll = true
 }) => {
 
