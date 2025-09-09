@@ -67,6 +67,8 @@ The first parameter is the mandatory CQL query string. Second is an optional obj
 
 - Cli use needs enviroment variable SRU_URL
 
+- V7 update changes `recordFormat` variable to `metadataFormat`
+
 ## License and copyright
 
 Copyright (c) 2015, 2017-2018, 2020-2025 **University Of Helsinki (The National Library Of Finland)**
