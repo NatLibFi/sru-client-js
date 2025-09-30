@@ -45,16 +45,16 @@
 	"dependencies": {
 		"@natlibfi/marc-record": "^10.0.0-alpha.1",
 		"@natlibfi/marc-record-serializers": "^11.0.0-alpha.2",
-		"@natlibfi/melinda-backend-commons": "^2.3.7",
-		"debug": "^4.4.0",
+		"@natlibfi/melinda-backend-commons": "^3.0.0-alpha.7",
+		"debug": "^4.4.3",
 		"http-status": "^2.1.0",
 		"xml2js": "^0.6.2"
 	},
 	"devDependencies": {
 		"@natlibfi/fixugen-http-client": "^4.0.0-alpha.1",
-		"@natlibfi/fixura": "^4.0.0-alpha.12",
+		"@natlibfi/fixura": "^4.0.0-alpha.13",
 		"cross-env": "^7.0.3",
-		"esbuild": "^0.25.8",
-		"eslint": "^9.32.0"
+		"esbuild": "^0.25.10",
+		"eslint": "^9.36.0"
 	}
 }
