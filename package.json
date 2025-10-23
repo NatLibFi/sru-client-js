@@ -11,13 +11,12 @@
 		"marc",
 		"code4lib"
 	],
-	"homepage": "https://github.com/natlibfi/sru-client-js",
+	"homepage": "https://www.npmjs.com/package/@natlibfi/sru-client",
 	"bugs": {
 		"url": "https://github.com/natlibfi/sru-client-js/issues"
 	},
 	"repository": {
-		"type": "git",
-		"url": "git@github.com:natlibfi/sru-client-js.git"
+		"url": "https://github.com/NatLibFi/sru-client-js"
 	},
 	"license": "MIT",
 	"version": "7.0.0-alpha.3",
@@ -43,16 +42,16 @@
 		"dev:debug": "cross-env LOG_LEVEL=debug DEBUG=@natlibfi/* NODE_ENV=test npm run watch:test"
 	},
 	"dependencies": {
-		"@natlibfi/marc-record": "^10.0.0-alpha.1",
-		"@natlibfi/marc-record-serializers": "^11.0.0-alpha.2",
-		"@natlibfi/melinda-backend-commons": "^3.0.0-alpha.7",
+		"@natlibfi/marc-record": "next",
+		"@natlibfi/marc-record-serializers": "next",
+		"@natlibfi/melinda-backend-commons": "next",
 		"debug": "^4.4.3",
 		"http-status": "^2.1.0",
 		"xml2js": "^0.6.2"
 	},
 	"devDependencies": {
-		"@natlibfi/fixugen-http-client": "^4.0.0-alpha.1",
-		"@natlibfi/fixura": "^4.0.0-alpha.13",
+		"@natlibfi/fixugen-http-client": "next",
+		"@natlibfi/fixura": "next",
 		"cross-env": "^7.0.3",
 		"esbuild": "^0.25.10",
 		"eslint": "^9.36.0"
