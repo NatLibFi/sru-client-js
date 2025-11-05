@@ -1,5 +1,5 @@
-import createClient, {SruSearchError} from '.';
-import {expect} from 'chai';
+import createClient, {SruSearchError} from './index.js';
+import assert from 'node:assert';
 import {READERS} from '@natlibfi/fixura';
 import generateTests from '@natlibfi/fixugen-http-client';
 import createDebugLogger from 'debug';
@@ -8,7 +8,7 @@ const debug = createDebugLogger('@natlibfi/sru-client:test');
 
 generateTests({
   callback,
-  path: [__dirname, '..', 'test-fixtures'],
+  path: [import.meta.dirname, '..', 'test-fixtures'],
   fixura: {
     reader: READERS.TEXT
   }
@@ -17,27 +17,24 @@ generateTests({
 function callback({getFixture, defaultParameters, method, error, expectedError, expectedNextOffset, expectedTotalCount}) {
   const expectedRecords = getFixture({components: ['expected-records.json'], reader: READERS.JSON});
 
-  let recordCount = 0; // eslint-disable-line functional/no-let
-  const records = []; // eslint-disable-line functional/no-let
+  let recordCount = 0;
+  const records = [];
 
   const client = createClient({...defaultParameters, url: 'http://foo.bar'});
 
   return new Promise((resolve, reject) => {
     client[method.name](method.parameters)
-      // eslint-disable-next-line max-statements
       .on('error', err => {
         debug(`Got error ${err}`);
-        // eslint-disable-next-line functional/no-conditional-statements
         if (err instanceof SruSearchError) {
           debug(`This is a SruSearchError`);
         }
         try {
           if (expectedError) {
-            expect(err.message).to.match(new RegExp(expectedError.error, 'u'));
-            // eslint-disable-next-line functional/no-conditional-statements
+            assert.match(err.message, new RegExp(expectedError.error, 'u'));
             if (expectedError.expectedErrorInstance === 'SruSearchError') {
               debug(`This should be an ${expectedError.expectedErrorInstance}`);
-              expect(err).to.be.instanceOf(SruSearchError);
+              assert(err instanceof SruSearchError);
             }
             return resolve();
           }
@@ -49,10 +46,9 @@ function callback({getFixture, defaultParameters, method, error, expectedError, 
       })
       .on('record', record => {
         debug(`Got record ${recordCount + 1}: ${record}`);
-        // eslint-disable-next-line functional/immutable-data
         records.push(record);
         try {
-          expect(expectedRecords[recordCount]).to.equal(record);
+          assert.deepEqual(expectedRecords[recordCount], record);
           recordCount++; // eslint-disable-line no-plusplus
         } catch (err) {
           reject(err);
@@ -61,23 +57,22 @@ function callback({getFixture, defaultParameters, method, error, expectedError, 
       .on('total', totalNumberOfRecords => {
         debug(`Got total: ${totalNumberOfRecords}`);
         try {
-          expect(Number(expectedTotalCount)).to.equal(totalNumberOfRecords);
+          assert.equal(Number(expectedTotalCount), totalNumberOfRecords);
         } catch (err) {
           reject(err);
         }
       })
 
-      // eslint-disable-next-line max-statements
       .on('end', nextOffset => {
         debug(`Got end, nextOffset: ${nextOffset}`);
         debug(`Fetched records: (${records.length}): ${JSON.stringify(records)}`);
         debug(`Expected records: (${expectedRecords.length}): ${JSON.stringify(expectedRecords)}`);
-        expect(expectedRecords).to.eql(records);
+        assert.deepEqual(expectedRecords, records);
 
         try {
           if (nextOffset) {
             debug('Got nextOffset');
-            expect(Number(expectedNextOffset)).to.eql(nextOffset);
+            assert.equal(Number(expectedNextOffset), nextOffset);
             return resolve();
           }
 
@@ -88,7 +83,7 @@ function callback({getFixture, defaultParameters, method, error, expectedError, 
           //}
           */
 
-          if (nextOffset) { // eslint-disable-line functional/no-conditional-statements
+          if (nextOffset) {
             throw new Error(`Unexpected next offset: ${nextOffset}`);
           }
           resolve();

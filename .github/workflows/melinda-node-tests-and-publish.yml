@@ -4,6 +4,10 @@ name: Melinda node tests
 
 on: push
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   build-node-versions:
     name: Node version matrix
@@ -11,14 +15,14 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x, 23.x]
+        node-version: [22.x, 24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -33,20 +37,22 @@ jobs:
   license-scan:
     name: License compliance check
     runs-on: ubuntu-latest
+    container: node:22
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: mikaelvesavuori/license-compliance-action@v1.0.3
+      - uses: actions/checkout@v5
+      - uses: mikaelvesavuori/license-compliance-action@v1
         with:
           exclude_pattern: /^@natlibfi/
 
   njsscan:
     name: Njsscan check
     runs-on: ubuntu-latest
+    container: node:22
 
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: nodejsscan scan
       id: njsscan
       uses: ajinabraham/njsscan-action@master
@@ -55,17 +61,27 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
+    container: node:22
     needs: [build-node-versions, njsscan]
     if: contains(github.ref, 'refs/tags/')
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v4
+      - name: Prepare node for publish
+        uses: actions/setup-node@v6
         with:
           node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm i
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.SRU_CLIENT_NPM_TOKEN }}
+      - name: Update npm
+        run: npm install -g npm@latest
+      - name: Clean install
+        run: npm ci
+      # Publish stable release with --tag latest
+      - name: Publish stable release
+        if: ${{!contains(github.ref, '-alpha')}}
+        run: npm publish --tag=latest
+      # Publish pre-release without --tag latest
+      - name: Publish pre-release
+        if: contains(github.ref, '-alpha')
+        run: npm publish --tag=next

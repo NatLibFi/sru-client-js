@@ -1,17 +1,18 @@
-import fetch from 'node-fetch';
 import httpStatus from 'http-status';
 import {EventEmitter} from 'events';
 import {Parser as XMLParser, Builder as XMLBuilder} from 'xml2js';
 import createDebugLogger from 'debug';
 import {promisify} from 'util';
+import {MARCXML} from '@natlibfi/marc-record-serializers';
 
 export class SruSearchError extends Error { }
 
 const setTimeoutPromise = promisify(setTimeout); // eslint-disable-line
 
-export const recordFormats = {
+export const metadataFormats = {
   object: 'object',
-  string: 'string'
+  string: 'string',
+  marcJson: 'marcJson'
 };
 
 export default ({
@@ -19,7 +20,7 @@ export default ({
   recordSchema: recordSchemaDefault,
   version = '2.0',
   maxRecordsPerRequest = 1000,
-  recordFormat = recordFormats.string,
+  metadataFormat = metadataFormats.string, // Renamed from 'recordFormat' in v7
   retrieveAll = true
 }) => {
 
@@ -53,10 +54,9 @@ export default ({
         return emitter.emit('error', err);
       }
 
-      // eslint-disable-next-line max-statements
       async function processRequest(startRecord) {
         const url = generateUrl({operation: 'searchRetrieve', query, startRecord, recordSchema, version, maximumRecords: maxRecordsPerRequest});
-        debug(`Sending request-${iteration}: ${url.toString()}`);
+        debug(`Sending request-${iteration}: ${url}`);
         const response = await fetch(url, {headers: {'Cache-control': 'max-age=0, must-revalidate'}});
         debugData(response.status);
         debugData(JSON.stringify(response));
@@ -67,12 +67,11 @@ export default ({
           const endRecord = isNaN(nextRecordOffset) ? totalNumberOfRecords : nextRecordOffset - 1;
           debug(`Request-${iteration} got records ${startRecord}-${endRecord} (${numberOfRecords}) out of total ${totalNumberOfRecords}.`);
 
-          if (error) { // eslint-disable-line functional/no-conditional-statements
+          if (error) {
             debug(`SRU received error: ${error}`);
             throw new SruSearchError(error);
           }
 
-          // eslint-disable-next-line functional/no-conditional-statements
           if (iteration === 1) {
             debugData(`Emitting total: ${totalNumberOfRecords}`);
             emitter.emit('total', totalNumberOfRecords);
@@ -145,11 +144,11 @@ export default ({
         }
 
         async function emitRecords(records, promises = []) {
-          const [record] = records;
+          const [record, ...rest] = records;
 
-          if (record) {
-            promises.push(formatAndEmitRecord(pathParser(record, 'zs:recordData/0'))); // eslint-disable-line
-            return emitRecords(records.slice(1), promises);
+          if (record !== undefined) {
+            promises.push(formatAndEmitRecord(pathParser(record, 'zs:recordData/0')));
+            return emitRecords(rest, promises);
           }
 
           await Promise.all(promises);
@@ -173,7 +172,7 @@ export default ({
         // returns undefined if the path cannot be resolved
         // requires that the segments in the path are always namespaced
         function pathParser(value, path) {
-          const pathArray = path.split('/');
+          const pathArray = `${path}`.split('/');
 
           return parse(pathArray, value);
 
@@ -204,11 +203,11 @@ export default ({
   }
 
   function createFormatter() {
-    if (recordFormat === recordFormats.object) {
-      return data => data;
+    if (metadataFormat === metadataFormats.object) {
+      return metadata => metadata;
     }
 
-    if (recordFormat === recordFormats.string) {
+    if (metadataFormat === metadataFormats.string) {
       const builder = new XMLBuilder({
         xmldec: {
           version: '1.0',
@@ -221,12 +220,33 @@ export default ({
         }
       });
 
-      return data => {
-        const [[key, value]] = Object.entries(data);
+      return metadata => {
+        const [[key, value]] = Object.entries(metadata);
         return builder.buildObject({[key]: value[0]});
       };
     }
 
-    throw new Error(`Invalid record format: ${recordFormat}`);
+    if (metadataFormat === metadataFormats.marcJson) {
+      const builder = new XMLBuilder({
+        xmldec: {
+          version: '1.0',
+          encoding: 'UTF-8',
+          standalone: false
+        },
+        renderOpts: {
+          pretty: true,
+          indent: '\t'
+        }
+      });
+
+      return async metadata => {
+        const [[key, value]] = Object.entries(metadata);
+        const xmlString = builder.buildObject({[key]: value[0]});
+        const record = await MARCXML.from(xmlString, {subfieldValues: false});
+        return record;
+      };
+    }
+
+    throw new Error(`Invalid record format: ${metadataFormat}`);
   }
 };
