@@ -5,7 +5,7 @@ import createSruClient from './index';
 
 run();
 
-/* eslint-disable max-statements, no-console */
+/* eslint-disable no-console */
 function run() {
   // const logger = createLogger();
 
@@ -71,20 +71,20 @@ function run() {
     console.log('********************');
   }
 
-  function onRecord(record) { // eslint-disable-line
+  function onRecord(record) {
     // Comment: console.log(record);
-    recordCounter++; //eslint-disable-line
+    recordCounter++; // eslint-disable-line no-plusplus
     console.log(`Record ${recordCounter}/${recordTotal}`);
 
-    if (showOutputRecord) {  // eslint-disable-line
-      console.log('Output:'); // eslint-disable-line
-      console.log(record); // eslint-disable-line
+    if (showOutputRecord) {
+      console.log('Output:');
+      console.log(record);
     }
 
     const folder = './results';
 
     if (writeFiles) {
-      console.log(`Writing to file: ${folder}/${recordCounter}`); // eslint-disable-line
+      console.log(`Writing to file: ${folder}/${recordCounter}`);
       prepareFolder(folder, recordCounter);
       fs.writeFileSync(`${folder}/${recordCounter}`, JSON.stringify(record.toObject()));
       return;

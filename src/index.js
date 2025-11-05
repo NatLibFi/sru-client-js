@@ -54,7 +54,6 @@ export default ({
         return emitter.emit('error', err);
       }
 
-      // eslint-disable-next-line max-statements
       async function processRequest(startRecord) {
         const url = generateUrl({operation: 'searchRetrieve', query, startRecord, recordSchema, version, maximumRecords: maxRecordsPerRequest});
         debug(`Sending request-${iteration}: ${url}`);

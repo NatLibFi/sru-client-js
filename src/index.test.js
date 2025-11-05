@@ -24,7 +24,6 @@ function callback({getFixture, defaultParameters, method, error, expectedError, 
 
   return new Promise((resolve, reject) => {
     client[method.name](method.parameters)
-      // eslint-disable-next-line max-statements
       .on('error', err => {
         debug(`Got error ${err}`);
         if (err instanceof SruSearchError) {
@@ -64,7 +63,6 @@ function callback({getFixture, defaultParameters, method, error, expectedError, 
         }
       })
 
-      // eslint-disable-next-line max-statements
       .on('end', nextOffset => {
         debug(`Got end, nextOffset: ${nextOffset}`);
         debug(`Fetched records: (${records.length}): ${JSON.stringify(records)}`);

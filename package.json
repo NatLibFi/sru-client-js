@@ -42,18 +42,18 @@
 		"dev:debug": "cross-env LOG_LEVEL=debug DEBUG=@natlibfi/* NODE_ENV=test npm run watch:test"
 	},
 	"dependencies": {
-		"@natlibfi/marc-record": "next",
-		"@natlibfi/marc-record-serializers": "next",
-		"@natlibfi/melinda-backend-commons": "next",
+		"@natlibfi/marc-record": "^10.0.0",
+		"@natlibfi/marc-record-serializers": "^11.0.0",
+		"@natlibfi/melinda-backend-commons": "^3.0.0",
 		"debug": "^4.4.3",
 		"http-status": "^2.1.0",
 		"xml2js": "^0.6.2"
 	},
 	"devDependencies": {
-		"@natlibfi/fixugen-http-client": "next",
-		"@natlibfi/fixura": "next",
-		"cross-env": "^7.0.3",
-		"esbuild": "^0.25.10",
-		"eslint": "^9.36.0"
+		"@natlibfi/fixugen-http-client": "^4.0.0",
+		"@natlibfi/fixura": "^4.0.0",
+		"cross-env": "^10.1.0",
+		"esbuild": "^0.25.12",
+		"eslint": "^9.39.1"
 	}
 }
