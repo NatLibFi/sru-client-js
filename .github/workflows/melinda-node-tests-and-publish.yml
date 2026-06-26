@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x, 24.x]
+        node-version: [24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -37,7 +37,7 @@ jobs:
   license-scan:
     name: License compliance check
     runs-on: ubuntu-latest
-    container: node:22
+    container: node:24
 
     steps:
       - uses: actions/checkout@v6
@@ -48,7 +48,7 @@ jobs:
   njsscan:
     name: Njsscan check
     runs-on: ubuntu-latest
-    container: node:22
+    container: node:24
 
     steps:
     - name: Checkout the code
@@ -61,7 +61,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    container: node:22
+    container: node:24
     needs: [build-node-versions, njsscan]
     if: contains(github.ref, 'refs/tags/')
 
@@ -71,7 +71,7 @@ jobs:
       - name: Prepare node for publish
         uses: actions/setup-node@v6
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Update npm
         run: npm install -g npm@latest
