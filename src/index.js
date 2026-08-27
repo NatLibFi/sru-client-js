@@ -5,7 +5,7 @@ import createDebugLogger from 'debug';
 import {promisify} from 'util';
 import {MARCXML} from '@natlibfi/marc-record-serializers';
 
-export class SruSearchError extends Error { }
+export class SruSearchError extends Error {}
 
 const setTimeoutPromise = promisify(setTimeout); // eslint-disable-line
 
@@ -21,13 +21,13 @@ export default ({
   version = '2.0',
   maxRecordsPerRequest = 1000,
   metadataFormat = metadataFormats.string, // Renamed from 'recordFormat' in v7
-  retrieveAll = true
+  retrieveAll = true,
+  cfHeader = undefined
 }) => {
-
   const debug = createDebugLogger('@natlibfi/sru-client');
   const debugData = debug.extend('data');
-
   debug(retrieveAll);
+
   const formatRecord = createFormatter();
 
   class Emitter extends EventEmitter {
@@ -57,7 +57,19 @@ export default ({
       async function processRequest(startRecord) {
         const url = generateUrl({operation: 'searchRetrieve', query, startRecord, recordSchema, version, maximumRecords: maxRecordsPerRequest});
         debug(`Sending request-${iteration}: ${url}`);
-        const response = await fetch(url, {headers: {'Cache-control': 'max-age=0, must-revalidate'}});
+
+        const headers = {
+          'Cache-control': 'max-age=0, must-revalidate',
+          'cf-connecting-ip': cfHeader
+        };
+
+        Object.keys(headers).forEach(header => {
+          if (headers[header] === undefined) {
+            delete headers[header];
+          }
+        });
+
+        const response = await fetch(url, {headers});
         debugData(response.status);
         debugData(JSON.stringify(response));
 

@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [24.x]
+        node-version: [24.x, 26.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -67,14 +67,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      # Setup .npmrc file to publish to npm
-      - name: Prepare node for publish
-        uses: actions/setup-node@v6
-        with:
-          node-version: '24.x'
-          registry-url: 'https://registry.npmjs.org'
-      - name: Update npm
-        run: npm install -g npm@latest
       - name: Clean install
         run: npm ci
       # Publish stable release with --tag latest
