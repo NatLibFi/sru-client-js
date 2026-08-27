@@ -19,7 +19,7 @@
 		"url": "https://github.com/NatLibFi/sru-client-js"
 	},
 	"license": "MIT",
-	"version": "7.0.4-alpha.1",
+	"version": "7.0.4",
 	"main": "dist/index.js",
 	"type": "module",
 	"engines": {
