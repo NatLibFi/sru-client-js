@@ -44,6 +44,7 @@ jobs:
       - uses: mikaelvesavuori/license-compliance-action@v1
         with:
           exclude_pattern: /^@natlibfi/
+          allow_licenses: '0BSD;Apache-2.0;BlueOak-1.0.0;BSD-2-Clause;BSD-3-Clause;CC-BY-3.0;CC0-1.0;ISC;MIT;MIT-0;(MIT AND CC-BY-3.0);Python-2.0'
 
   njsscan:
     name: Njsscan check
