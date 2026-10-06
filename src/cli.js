@@ -1,9 +1,18 @@
 import fs from 'fs';
 import yargs from 'yargs';
-import {handleInterrupt} from '@natlibfi/melinda-backend-commons';
 import createSruClient from './index';
 
 run();
+
+function handleInterrupt(arg) {
+  if (arg instanceof Error) {
+    console.error(`Uncaught Exception: ${arg.stack}`); // eslint-disable-line no-console
+    process.exit(1);
+  }
+
+  console.log(`Received ${arg}`); // eslint-disable-line no-console
+  process.exit(1);
+}
 
 /* eslint-disable no-console */
 function run() {
